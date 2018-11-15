@@ -5,6 +5,8 @@
  */
 package View;
 
+import Controller.UserController;
+import Model.User;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,9 +19,8 @@ import javax.swing.text.MaskFormatter;
  */
 public class Register extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Teste
-     */
+    UserController controller = new UserController();
+    
     public Register() {
         initComponents();
     }
@@ -205,6 +206,17 @@ public class Register extends javax.swing.JFrame {
 
     private void jButtonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegisterActionPerformed
     if(validaCampos()== true){
+        
+    User user = new User();
+    user.setName(jTextName.getText());
+    user.setEmail(jTextEmail.getText());
+    user.setTelephone(jTextPhone.getText());
+    user.setPassword(jTextPassword.getText());
+        
+    controller.submitUsertoServer(ip, port, user);
+    JOptionPane.showMessageDialog(rootPane, "Cadastrado com sucesso!");
+
+    
     Login login = new Login();
     login.setVisible(true);
     dispose();}

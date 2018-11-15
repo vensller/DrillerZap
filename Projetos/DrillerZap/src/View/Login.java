@@ -15,6 +15,8 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
+        String adress = JOptionPane.showInputDialog("Digite o endereço do servidor");
+        int port = Integer.parseInt(JOptionPane.showInputDialog("Digite a porta do servidor"));
 
         
         
