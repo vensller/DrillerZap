@@ -101,6 +101,11 @@ public class Login extends javax.swing.JFrame {
         jLabelSenha.setText("Senha");
 
         jButtonConfiguration.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/configuration.png"))); // NOI18N
+        jButtonConfiguration.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConfigurationActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelLayout = new javax.swing.GroupLayout(jPanel);
         jPanel.setLayout(jPanelLayout);
@@ -178,6 +183,11 @@ public class Login extends javax.swing.JFrame {
         teste.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButtonCadastraActionPerformed
+
+    private void jButtonConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigurationActionPerformed
+        ConfigView config = new ConfigView();
+        config.setVisible(true);
+    }//GEN-LAST:event_jButtonConfigurationActionPerformed
 
     /**
      * @param args the command line arguments
