@@ -8,7 +8,8 @@ import java.util.List;
  * @author Ivens
  */
 public class User implements Serializable{
-    private static final long serialVersionUID = 7526472295622776147L;
+    
+    private static final long serialVersionUID = 7526472295622776147L;    
     private int ID;
     private String name;
     private String email;

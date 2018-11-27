@@ -1,6 +1,8 @@
 package Server;
 
 import Model.Message;
+import Model.MessageType;
+import Model.User;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,7 +33,9 @@ public class UserSocketThread extends Thread{
             if (obj instanceof Message){
                 Message msg = (Message) obj;
                 Message outMsg = processMessage(msg);
-                output.writeObject(outMsg);
+                
+                if (outMsg != null)
+                    output.writeObject(outMsg);
             }           
                                     
             output.close();            
@@ -55,7 +59,31 @@ public class UserSocketThread extends Thread{
     }  
     
     private Message processMessage(Message msg){
-        return null;
+        Message result = null;
+        switch (msg.getType()){
+            case ALIVE :
+                
+                break;
+            case DOLOGIN :
+                
+                break;
+            case DOLOGOFF :
+                
+                break;
+            case GIVECONTACTS :
+                
+                break;
+            case REGISTER :
+                User user = (User) msg.getMessage();
+//                if (UserDao.getUserByEmail(user.getEmail()) == null){
+//                    UserDao.insert(msg.getMessage());
+                    result = new Message(MessageType.REGISTERAPROVED, null);                    
+//                }else result = new Message(MessageType.REGISTERNOTAPROVED, "Email já cadastrado!");
+                
+                break;
+            default : System.out.println("WRONG MESSAGE TYPE RECEIVED! " + msg.toString());
+        }
+        return result;
     }
     
     
