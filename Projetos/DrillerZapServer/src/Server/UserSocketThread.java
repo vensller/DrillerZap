@@ -26,9 +26,13 @@ public class UserSocketThread extends Thread{
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());            
             
-            Message msg = (Message) input.readObject();            
-            Message outMsg = processMessage(msg);
-            output.writeObject(outMsg);
+            Object obj =  input.readObject();            
+            
+            if (obj instanceof Message){
+                Message msg = (Message) obj;
+            }
+           // Message outMsg = processMessage(msg);
+           // output.writeObject(outMsg);
                                     
             output.close();            
             input.close();
