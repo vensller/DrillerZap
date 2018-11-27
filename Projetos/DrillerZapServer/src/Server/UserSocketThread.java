@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +26,9 @@ public class UserSocketThread extends Thread{
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());            
             
-            Message msg = (Message) input.readObject();
+            Message msg = (Message) input.readObject();            
+            Message outMsg = processMessage(msg);
+            output.writeObject(outMsg);
                                     
             output.close();            
             input.close();
@@ -46,9 +47,12 @@ public class UserSocketThread extends Thread{
             } catch (IOException ex1) {
                 Logger.getLogger(UserSocketThread.class.getName()).log(Level.SEVERE, null, ex1);
             }
-        }        
-        
+        }         
     }  
+    
+    private Message processMessage(Message msg){
+        return null;
+    }
     
     
 }
