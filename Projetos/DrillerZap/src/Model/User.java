@@ -1,13 +1,13 @@
 package Model;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Ivens
  */
-public class User {
+public class User implements Serializable{
     
     private int ID;
     private String name;

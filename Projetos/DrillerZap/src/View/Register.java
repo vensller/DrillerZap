@@ -195,8 +195,7 @@ public class Register extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextPhoneActionPerformed
 
     private void jButtonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegisterActionPerformed
-        if (validaCampos() == true) {
-            
+        if (validaCampos() == true) {            
             controller.submitUserToServer(jTextName.getText(),
                                           jTextEmail.getText(),
                                           jTextPhone.getText(),
