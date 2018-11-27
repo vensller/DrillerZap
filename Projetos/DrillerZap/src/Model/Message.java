@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author Ivens
  */
 public class Message implements Serializable{
-    
+    private static final long serialVersionUID = 7526472295622776145L;
     private MessageType type;
     private Object message;
 
