@@ -1,13 +1,16 @@
 package View;
 
+import Controller.ApprovedObserver;
 import Controller.UserController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author Paulo
  */
-public class Register extends javax.swing.JFrame {
+public class Register extends javax.swing.JFrame implements ApprovedObserver{
 
     UserController controller = new UserController();
 
@@ -190,19 +193,17 @@ public class Register extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jTextPasswordActionPerformed
 
-    private void jTextPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextPhoneActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextPhoneActionPerformed
-
     private void jButtonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegisterActionPerformed
         if (validaCampos() == true) {            
-            controller.submitUserToServer(jTextName.getText(),
-                                          jTextEmail.getText(),
-                                          jTextPhone.getText(),
-                                          jTextPassword.getText());
+            try {
+                controller.submitUserToServer(jTextName.getText(),
+                        jTextEmail.getText(),
+                        jTextPhone.getText(),
+                        jTextPassword.getText());
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
-            JOptionPane.showMessageDialog(rootPane, "Cadastrado com sucesso!");
-
             Login login = new Login();
             login.setVisible(true);
             dispose();
@@ -215,6 +216,10 @@ public class Register extends javax.swing.JFrame {
     private void jTextNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextNameActionPerformed
+
+    private void jTextPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextPhoneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextPhoneActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonRegister;
@@ -230,4 +235,14 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JPasswordField jTextPassword;
     private javax.swing.JFormattedTextField jTextPhone;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void cadastroApproved() {
+        JOptionPane.showMessageDialog(rootPane, "Cadastro Aprovado");
+    }
+
+    @Override
+    public void cadastroNoApproved(String reason) {
+    JOptionPane.showMessageDialog(rootPane, "Cadastro não aprovado, Motivo:"+reason);
+    }
 }
