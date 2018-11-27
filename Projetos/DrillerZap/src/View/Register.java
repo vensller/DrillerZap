@@ -213,7 +213,7 @@ public class Register extends javax.swing.JFrame {
     user.setTelephone(jTextPhone.getText());
     user.setPassword(jTextPassword.getText());
         
-    controller.submitUsertoServer(ip, port, user);
+//    controller.submitUsertoServer(ip, port, user);
     JOptionPane.showMessageDialog(rootPane, "Cadastrado com sucesso!");
 
     

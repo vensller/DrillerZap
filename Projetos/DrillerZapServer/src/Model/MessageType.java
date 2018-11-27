@@ -10,5 +10,6 @@ public enum MessageType {
     DOLOGIN,
     DOLOGOFF,
     SENDCONTACTS,
-    ALIVE
+    ALIVE,
+    REGISTER
 }
