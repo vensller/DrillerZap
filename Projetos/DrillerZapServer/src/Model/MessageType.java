@@ -11,5 +11,7 @@ public enum MessageType {
     DOLOGOFF,
     SENDCONTACTS,
     ALIVE,
-    REGISTER
+    REGISTER,
+    REGISTERAPROVED,
+    REGISTERNOTAPROVED
 }
