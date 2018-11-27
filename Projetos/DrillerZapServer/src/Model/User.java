@@ -1,7 +1,6 @@
 package Model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,13 +13,27 @@ public class User implements Serializable{
     private String name;
     private String email;
     private String telephone;
+    private String password;
     private List<User> contacts;
 
-    public User(String name, String email, String telephone) {
+    public User(int ID, String name, String email, String telephone, String password, List<User> contacts) {
+        this.ID = ID;
         this.name = name;
         this.email = email;
         this.telephone = telephone;
-        this.contacts = new ArrayList<>();
+        this.password = password;
+        this.contacts = contacts;
+    }
+
+    public User() {
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getName() {
@@ -47,6 +60,14 @@ public class User implements Serializable{
         this.telephone = telephone;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public List<User> getContacts() {
         return contacts;
     }
@@ -54,13 +75,9 @@ public class User implements Serializable{
     public void setContacts(List<User> contacts) {
         this.contacts = contacts;
     }
-
-    public void addContact(User contact){
-        contacts.add(contact);
-    }
     
-    public void removeContact(User contact){
-        contacts.remove(contact);
-    }
+    
+
+
     
 }

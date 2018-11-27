@@ -32,7 +32,7 @@ public class UserController {
             Message msg = new Message(MessageType.REGISTER, user);
             
             output.writeObject(msg);
-            
+                       
             output.flush();
             output.close();            
             input.close();

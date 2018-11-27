@@ -30,9 +30,9 @@ public class UserSocketThread extends Thread{
             
             if (obj instanceof Message){
                 Message msg = (Message) obj;
-            }
-           // Message outMsg = processMessage(msg);
-           // output.writeObject(outMsg);
+                Message outMsg = processMessage(msg);
+                output.writeObject(outMsg);
+            }           
                                     
             output.close();            
             input.close();
