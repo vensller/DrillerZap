@@ -15,12 +15,6 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
-        String adress = JOptionPane.showInputDialog("Digite o endereço do servidor");
-        int port = Integer.parseInt(JOptionPane.showInputDialog("Digite a porta do servidor"));
-
-        
-        
-        
     }
 
     /**
@@ -32,6 +26,7 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         jPanel = new javax.swing.JPanel();
         jTextUser = new javax.swing.JTextField();
         jTextPassword = new javax.swing.JPasswordField();
@@ -41,6 +36,9 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabelEmail = new javax.swing.JLabel();
         jLabelSenha = new javax.swing.JLabel();
+        jButtonConfiguration = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,6 +100,8 @@ public class Login extends javax.swing.JFrame {
         jLabelSenha.setForeground(new java.awt.Color(255, 255, 255));
         jLabelSenha.setText("Senha");
 
+        jButtonConfiguration.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/configuration.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanelLayout = new javax.swing.GroupLayout(jPanel);
         jPanel.setLayout(jPanelLayout);
         jPanelLayout.setHorizontalGroup(
@@ -124,7 +124,10 @@ public class Login extends javax.swing.JFrame {
                         .addGap(157, 157, 157))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLayout.createSequentialGroup()
                         .addComponent(jButtonCadastra)
-                        .addGap(134, 134, 134))))
+                        .addGap(134, 134, 134))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLayout.createSequentialGroup()
+                        .addComponent(jButtonConfiguration)
+                        .addContainerGap())))
         );
         jPanelLayout.setVerticalGroup(
             jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,7 +145,8 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jButtonLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCadastra)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonConfiguration))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -211,7 +215,9 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonCadastra;
+    private javax.swing.JButton jButtonConfiguration;
     private javax.swing.JButton jButtonLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelEmail;
