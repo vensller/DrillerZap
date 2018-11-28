@@ -176,6 +176,11 @@ public class Login extends javax.swing.JFrame {
                 controller.login(
                         jTextUser.getText(),
                         jTextPassword.getText());
+                
+                Chat chat = new Chat();
+                chat.setVisible(true);
+                dispose();
+                
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
