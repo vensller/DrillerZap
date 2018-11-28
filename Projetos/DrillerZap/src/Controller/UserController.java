@@ -80,5 +80,32 @@ public class UserController {
     public void observ(ApprovedObserver obs){
         observers.add(obs);
     }
+    
+    public void login(String email, String password) throws ClassNotFoundException {
+        try {
+            User user = new User();
+            user.setEmail(email);
+            user.setPassword(password);
+            Socket socket = new Socket(Configuration.getInstance().getAddress(), Configuration.getInstance().getPort());
+            socket.setReuseAddress(true);
+
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
+            Message msg = new Message(MessageType.DOLOGIN, user);
+
+            output.writeObject(msg);
+            
+            //Fazer Ler Retorno
+            
+            output.flush();
+            output.close();
+            input.close();
+            socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
 }

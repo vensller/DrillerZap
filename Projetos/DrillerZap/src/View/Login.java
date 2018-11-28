@@ -1,5 +1,8 @@
 package View;
 
+import Controller.UserController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -7,6 +10,8 @@ import javax.swing.JOptionPane;
  * @author Paulo
  */
 public class Login extends javax.swing.JFrame {
+
+    UserController controller = new UserController();
 
     public Login() {
         initComponents();
@@ -165,9 +170,17 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextUserActionPerformed
 
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
-    if(jTextUser.getText().length() ==0 || jTextPassword.getText().length()==0){
-        JOptionPane.showMessageDialog(rootPane, "E-mail ou Senha não Informado");
-    }
+        if (jTextUser.getText().length() == 0 || jTextPassword.getText().length() == 0) {
+            JOptionPane.showMessageDialog(rootPane, "E-mail ou Senha não Informado");
+        } else {
+            try {
+                controller.login(
+                        jTextUser.getText(),
+                        jTextPassword.getText());
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_jButtonLoginActionPerformed
 
     private void jButtonCadastraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastraActionPerformed
