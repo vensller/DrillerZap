@@ -16,6 +16,8 @@ public class Register extends javax.swing.JFrame implements ApprovedObserver{
 
     public Register() {
         initComponents();
+        this.setLocationRelativeTo(null);
+
     }
 
     public boolean validaCampos() {
