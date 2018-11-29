@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,21 +27,25 @@ public class CommunicateUserAlive extends Thread{
 
     @Override
     public void run() {
-        try {
+         try {
             Socket socket = new Socket(user.getIp(), user.getPort());
-            socket.setSoTimeout(1000);
+            socket.setSoTimeout(2000);
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             
             Message message = new Message(MessageType.KEEPALIVE, null);
             output.writeObject(message);
-            
+                        
             Message messageInput = (Message) input.readObject();
             
             if (messageInput.getType() != MessageType.ALIVE){
-                ServerConfig.getInstance().removeUser(user);
+                ServerConfig.getInstance().removeUser(user.getUser());
             }            
-            
+          
+        } catch (SocketTimeoutException ex) {
+            ServerConfig.getInstance().removeUser(user.getUser());
+        } catch (SocketException ex) {            
+            Logger.getLogger(CommunicateUserAlive.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(CommunicateUserAlive.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
