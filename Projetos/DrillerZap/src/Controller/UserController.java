@@ -2,6 +2,7 @@ package Controller;
 
 import Model.User;
 import Model.Configuration;
+import Model.Contact;
 import Model.Message;
 import Model.MessageType;
 import Model.UserConfig;
@@ -26,6 +27,7 @@ public class UserController {
     private List<ApprovedObserver> observers;
     private List<LoginObserver> loginObservers;
     private List<UpdateObserver> updateObserves;
+    private List<AddContactObserver> addContactObservers;
 
     public UserController() {
         observers = new ArrayList<>();
@@ -114,6 +116,7 @@ public class UserController {
                 loginApproved();
                 
                 Configuration.getInstance().setLoggedUser((UserConfig) msgApproved.getMessage());
+                
 
             } else {
                 loginNoApproved();
@@ -171,10 +174,10 @@ public class UserController {
 
             if (msgApproved.getType() == MessageType.UPDATESUCESS) {
 
-                loginApproved();
+                updateApproved();
 
             } else {
-                loginNoApproved();
+                updateNoApproved();
             }
 
             output.close();
@@ -204,6 +207,72 @@ public class UserController {
 
     public void observUpdate(UpdateObserver obs) {
         updateObserves.add(obs);
+    }
+    
+    public void addContact(String email) throws ClassNotFoundException {
+        try {
+            
+            User user = new User();
+            user.setEmail(email);
+            Contact contact = new Contact(Configuration.getInstance().getLoggedUser().getUser(), user);
+            Socket socket = new Socket(Configuration.getInstance().getAddress(), Configuration.getInstance().getPort());
+            socket.setReuseAddress(true);
+
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
+            Message msg = new Message(MessageType.REGISTERCONTACT, contact);
+
+            output.writeObject(msg);
+            output.flush();
+
+            Object obj = input.readObject();
+            Message msgApproved = (Message) obj;
+
+            output.close();
+            input.close();
+            
+            if (msgApproved.getType() == MessageType.CONTACTREGISTERED) {
+                output = new ObjectOutputStream(socket.getOutputStream());
+                input = new ObjectInputStream(socket.getInputStream());
+
+                output.writeObject(new Message(MessageType.GIVECONTACTS, contact.getUser()));
+                output.flush();
+                List<User> listContacts = (ArrayList<User>) input.readObject();
+                Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
+                addContactApproved();
+                
+                
+
+            } else {
+                addContactNoApproved();
+            }
+
+            socket.close();
+        } catch (ConnectException a) {
+            loginNoApproved();
+        } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    public void addContactApproved() {
+        for (AddContactObserver obs : addContactObservers) {
+            obs.addContactApproved();
+        }
+
+    }
+
+    public void addContactNoApproved() {
+        for (AddContactObserver obs : addContactObservers) {
+            obs.addContactNotApproved();
+        }
+
+    }
+
+    public void observUpdate(AddContactObserver obs) {
+        addContactObservers.add(obs);
     }
 
 }

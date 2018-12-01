@@ -1,14 +1,23 @@
 package View;
 
+import Controller.AddContactObserver;
+import Controller.UserController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Paulo
  */
-public class Chat extends javax.swing.JFrame {
+public class Chat extends javax.swing.JFrame implements AddContactObserver{
 
+    private UserController controller;
+    
     public Chat() {
         initComponents();
         this.setLocationRelativeTo(null);
+        controller = new UserController();
 
     }
 
@@ -67,6 +76,11 @@ public class Chat extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jListContatos);
 
         jButtonAdicionar.setText("Adicionar");
+        jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdicionarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -207,6 +221,16 @@ public class Chat extends javax.swing.JFrame {
     perfil.setVisible(true);
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
+    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+    String email = JOptionPane.showInputDialog("Informa o e-mail do contato");
+        try {
+            controller.addContact(email);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    }//GEN-LAST:event_jButtonAdicionarActionPerformed
+
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdicionar;
@@ -226,4 +250,14 @@ public class Chat extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextAreaChat;
     private javax.swing.JTextArea jTextAreaMensagem;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void addContactApproved() {
+        JOptionPane.showMessageDialog(rootPane, "Contato Cadastrado com sucesso!");
+    }
+
+    @Override
+    public void addContactNotApproved() {
+        JOptionPane.showMessageDialog(rootPane, "Contato não encontrado!");
+    }
 }

@@ -26,6 +26,7 @@ public class UserUpdate extends javax.swing.JFrame implements UpdateObserver{
         jTextName.setText(Configuration.getInstance().getLoggedUser().getUser().getName());
         jTextPassword.setText(Configuration.getInstance().getLoggedUser().getUser().getPassword());
         jTextPhone.setText(Configuration.getInstance().getLoggedUser().getUser().getTelephone());
+        jTextEmail.setText(Configuration.getInstance().getLoggedUser().getUser().getEmail());
     }
     
 
@@ -208,10 +209,10 @@ public class UserUpdate extends javax.swing.JFrame implements UpdateObserver{
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
         if (validaCampos() == true) {            
             try {
-                controller.updateUser(jTextName.getText(),
-                        jTextEmail.getText(),
+                controller.updateUser(jTextEmail.getText(),
+                        jTextPassword.getText(),
                         jTextPhone.getText(),
-                        jTextPassword.getText());
+                        jTextName.getText());
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(UserUpdate.class.getName()).log(Level.SEVERE, null, ex);
             }
