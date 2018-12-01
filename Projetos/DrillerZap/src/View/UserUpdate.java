@@ -23,9 +23,9 @@ public class UserUpdate extends javax.swing.JFrame implements UpdateObserver{
         controller = new UserController();
         controller.observUpdate(this);
         
-        jTextName.setText(Configuration.getInstance().getLoggedUser().getName());
-        jTextPassword.setText(Configuration.getInstance().getLoggedUser().getPassword());
-        jTextPhone.setText(Configuration.getInstance().getLoggedUser().getTelephone());
+        jTextName.setText(Configuration.getInstance().getLoggedUser().getUser().getName());
+        jTextPassword.setText(Configuration.getInstance().getLoggedUser().getUser().getPassword());
+        jTextPhone.setText(Configuration.getInstance().getLoggedUser().getUser().getTelephone());
     }
     
 
@@ -208,7 +208,7 @@ public class UserUpdate extends javax.swing.JFrame implements UpdateObserver{
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
         if (validaCampos() == true) {            
             try {
-                controller.submitUserToServer(jTextName.getText(),
+                controller.updateUser(jTextName.getText(),
                         jTextEmail.getText(),
                         jTextPhone.getText(),
                         jTextPassword.getText());
