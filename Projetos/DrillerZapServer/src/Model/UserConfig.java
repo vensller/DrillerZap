@@ -1,10 +1,12 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Ivens
  */
-public class UserConfig {
+public class UserConfig implements Serializable{
     private static final long serialVersionUID = 75264722956227547L;
     
     private User user;
