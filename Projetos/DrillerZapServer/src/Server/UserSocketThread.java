@@ -2,6 +2,7 @@ package Server;
 
 import DAO.ContactDao;
 import DAO.UserDao;
+import Model.Contact;
 import Model.Message;
 import Model.MessageType;
 import Model.ServerConfig;
@@ -13,8 +14,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -63,41 +62,59 @@ public class UserSocketThread extends Thread{
         }         
     }  
     
-    private Message processMessage(Message msg){        
-        User user = (User) msg.getMessage();
+    private Message processMessage(Message msg){                
         switch (msg.getType()){
             case ALIVE :                
                 break;
             case DOLOGIN :
-                return getLoginMessage(user);
+                return getLoginMessage(msg);
             case DOLOGOFF :
-                return getLogoffMessage(user);
+                return getLogoffMessage(msg);
             case GIVECONTACTS :                
-                return getUserContactsMessage(user);
+                return getUserContactsMessage(msg);
             case REGISTER :
-                return getRegisterMessage(user);
+                return getRegisterMessage(msg);
             case UPDATEUSER :
-                return getUserUpdateMessage(user);
+                return getUserUpdateMessage(msg);
             case REGISTERCONTACT :
-                
+                return getRegisterContactMessage(msg);
+            case REMOVECONTACT :
+                return getRemoveContactMessage(msg);
             default : System.out.println("WRONG MESSAGE TYPE RECEIVED! " + msg.toString());
         }
         
         return null;
     }
     
-    private Message getRegisterContactMessage(User user, User contact){
+    private Message getRemoveContactMessage(Message message){
         return null;
     }
     
-    private Message getRegisterMessage(User user){
+    private Message getRegisterContactMessage(Message message){
+        Contact contact = (Contact) message.getMessage();
+        User user = (User) userDao.getObjByUnique(contact.getUser().getEmail());
+        User userContact = (User) userDao.getObjByUnique(contact.getContact().getEmail());
+        contact.setContact(userContact);
+        contact.setUser(user);
+        
+        if (user != null && userContact != null){
+            if (contactDao.getObjByUnique(user.getID() + " AND A.ID_CONTACT = " + userContact.getID()) == null){
+                contactDao.insert(contact);
+                return new Message(MessageType.CONTACTREGISTERED, "Contato adicionado com sucesso!");
+            }else return new Message(MessageType.CONTACTREGFAIL, "Contato já adicionado!");
+        }else return new Message(MessageType.CONTACTREGFAIL, "Contato não encontrado!");        
+    }
+    
+    private Message getRegisterMessage(Message message){
+        User user = (User) message.getMessage();
         if (userDao.getObjByUnique(user.getEmail()) == null){
             userDao.insert(user);
             return new Message(MessageType.REGISTERAPROVED, null);
         }else return new Message(MessageType.REGISTERNOTAPROVED, "Email já cadastrado!");
     }
     
-    private Message getLoginMessage(User user){        
+    private Message getLoginMessage(Message message){
+        User user = (User) message.getMessage();
         User dbUser = (User) userDao.getObjByUnique(user.getEmail());
         
         if (dbUser != null){
@@ -107,12 +124,14 @@ public class UserSocketThread extends Thread{
         }else return new Message(MessageType.USERNOTLOGGED, "Email não está cadastrado!");                
     }
     
-    private Message getLogoffMessage(User user){
+    private Message getLogoffMessage(Message message){
+        User user = (User) message.getMessage();
         ServerConfig.getInstance().removeUser(user);
         return new Message(MessageType.USERLOGGEDOFF, "Usuário deslogado com sucesso!");
     }
     
-    private Message getUserContactsMessage(User user){        
+    private Message getUserContactsMessage(Message message){        
+        User user = (User) message.getMessage();
         List<UserConfig> userContacts = new ArrayList<>();
         List<Object> contacts = contactDao.getObjects(user.getID() + "");
         
@@ -127,7 +146,8 @@ public class UserSocketThread extends Thread{
         return new Message(MessageType.SENDCONTACTS, userContacts);
     }
     
-    private Message getUserUpdateMessage(User user){
+    private Message getUserUpdateMessage(Message message){
+        User user = (User) message.getMessage();
         if (userDao.getObjByUnique(user.getEmail()) != null){
             userDao.update(user);
             return new Message(MessageType.UPDATESUCESS, "");

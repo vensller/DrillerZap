@@ -63,7 +63,31 @@ public class UserDao implements Dao{
 
     @Override
     public Object getObjById(String id) {
-        return null;
+         User user = null;
+        
+        Connection con = ConnectionFactory.getConnection();
+        try {
+            PreparedStatement stmt = con.prepareStatement(sqlFind);
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){
+                user.setID(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setTelephone(rs.getString("telephone"));
+                user.setPassword(rs.getString("password"));                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return user;
     }
 
     @Override

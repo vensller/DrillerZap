@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.Contact;
 import Model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +18,8 @@ import java.util.logging.Logger;
 public class ContactDao implements Dao{
     
     private String sqlFindContacts = "SELECT * FROM CONTACT A WHERE A.ID_USER = ?";
+    private String sqlInsert = "INSERT INTO CONTACT (ID_USER, ID_CONTACT) VALUES (?, ?)";
+    private String sqlDelete = "DELETE CONTACT WHERE ID_USER = ? AND ID_CONTACT = ?";
     private UserDao userDao;
     
     public ContactDao(){
@@ -25,12 +28,33 @@ public class ContactDao implements Dao{
 
     @Override
     public void insert(Object obj) {
+        Connection con = ConnectionFactory.getConnection();
+        try {
+            con.setAutoCommit(true);
+            Contact contact = (Contact) obj;
+            PreparedStatement stmt = con.prepareStatement(sqlInsert);
+            stmt.setInt(1, contact.getUser().getID());
+            stmt.setInt(2, contact.getContact().getID());
+            stmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(ContactDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 
     @Override
     public void delete(Object obj) {
-
+        Connection con = ConnectionFactory.getConnection();
+        try {
+            con.setAutoCommit(true);
+            Contact contact = (Contact) obj;                    
+            PreparedStatement stmt = con.prepareStatement(sqlDelete);
+            stmt.setInt(1, contact.getUser().getID());
+            stmt.setInt(2, contact.getContact().getID());
+            stmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(ContactDao.class.getName()).log(Level.SEVERE, null, ex);
+        }        
     }
 
     @Override

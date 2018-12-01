@@ -76,6 +76,10 @@ public class User implements Serializable{
     public void setContacts(List<User> contacts) {
         this.contacts = contacts;
     }
+
+    public Object getContact() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
 
