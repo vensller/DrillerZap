@@ -17,8 +17,9 @@ public class Server {
             ServerSocket serverSocket = new ServerSocket(56000);
             serverSocket.setReuseAddress(true);
             KeepAliveThread keepAlive = new KeepAliveThread();
-            keepAlive.start();
+//            keepAlive.start();
             while (true){
+                System.out.println("Waiting connection...");
                 Socket socket = serverSocket.accept();
                 UserSocketThread thread = new UserSocketThread(socket);
                 thread.start();

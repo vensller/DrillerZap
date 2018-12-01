@@ -30,6 +30,7 @@ public class UserSocketThread extends Thread{
         this.socket = socket;
         this.userDao = new UserDao();
         this.contactDao = new ContactDao();
+        System.out.println("Client " + socket.getInetAddress().toString() + " connected.");
     }    
 
     @Override
@@ -44,27 +45,21 @@ public class UserSocketThread extends Thread{
                 Message msg = (Message) obj;
                 Message outMsg = processMessage(msg);
                 
-                if (outMsg != null)
+                if (outMsg != null){
                     output.writeObject(outMsg);
+                    output.flush();
+                }
+                    
             }           
                                     
             output.close();            
-            input.close();
-            socket.close();
+            input.close();        
+            System.out.println("Client " + socket.getInetAddress().toString() + " finished.");
+            socket.close();    
         }catch(IOException e){
-            e.printStackTrace();
-            try{
-                socket.close();
-            }catch(IOException e2){
-                e2.printStackTrace();
-            }
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            try {
-                socket.close();
-            } catch (IOException ex1) {
-                Logger.getLogger(UserSocketThread.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            e.printStackTrace();            
+        }catch (ClassNotFoundException ex) {
+            ex.printStackTrace();            
         }         
     }  
     
@@ -111,7 +106,7 @@ public class UserSocketThread extends Thread{
     }
     
     private Message getUserContactsMessage(User user){        
-        List<UserConfig> userContacts = new ArrayList();
+        List<UserConfig> userContacts = new ArrayList<>();
         List<Object> contacts = contactDao.getObjects(user.getID() + "");
         
         for (Object obj : contacts){

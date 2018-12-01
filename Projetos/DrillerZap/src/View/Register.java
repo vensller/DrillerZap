@@ -12,11 +12,13 @@ import javax.swing.JOptionPane;
  */
 public class Register extends javax.swing.JFrame implements ApprovedObserver{
 
-    UserController controller = new UserController();
+    private UserController controller;
 
     public Register() {
         initComponents();
         this.setLocationRelativeTo(null);
+        controller = new UserController();
+        controller.observ(this);
 
     }
 

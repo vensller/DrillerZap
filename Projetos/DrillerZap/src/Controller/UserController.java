@@ -22,7 +22,7 @@ public class UserController {
     private List<ApprovedObserver> observers;
 
     public UserController(){
-        observers = new ArrayList();
+        observers = new ArrayList<>();
     }
     
     public void submitUserToServer(String name, String email, String telephone, String password) throws ClassNotFoundException {
@@ -41,6 +41,7 @@ public class UserController {
             Message msg = new Message(MessageType.REGISTER, user);
 
             output.writeObject(msg);
+            output.flush();
 
             Object obj = input.readObject();
             Message msgApproved = (Message) obj;
@@ -52,8 +53,7 @@ public class UserController {
             }else{
                 cadastroNoApproved(msg.getMessage().toString());
             }
-
-            output.flush();
+            
             output.close();
             input.close();
             socket.close();

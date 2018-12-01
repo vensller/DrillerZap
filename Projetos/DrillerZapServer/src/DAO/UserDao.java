@@ -1,6 +1,14 @@
 package DAO;
 
+import Model.User;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,6 +24,25 @@ public class UserDao implements Dao{
 
     @Override
     public void insert(Object obj) {
+        Connection con = ConnectionFactory.getConnection();
+        User user = (User) obj;
+        try {
+            con.setAutoCommit(true);
+            PreparedStatement stmt = con.prepareStatement(sqlInsert);
+            stmt.setString(1, user.getName());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getPassword());
+            stmt.setString(4, user.getTelephone());
+            stmt.execute();            
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         
     }
 
@@ -41,7 +68,31 @@ public class UserDao implements Dao{
 
     @Override
     public Object getObjByUnique(String whereUnique) {
-        return null;
+        User user = null;
+        
+        Connection con = ConnectionFactory.getConnection();
+        try {
+            PreparedStatement stmt = con.prepareStatement(sqlFindEmail);
+            stmt.setString(1, whereUnique);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){
+                user.setID(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setTelephone(rs.getString("telephone"));
+                user.setPassword(rs.getString("password"));                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return user;
     }
     
     
