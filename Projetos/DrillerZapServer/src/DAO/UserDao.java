@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class UserDao implements Dao{
     
     private String sqlInsert = "INSERT INTO USERS (NAME, EMAIL, PASSWORD, TELEPHONE) VALUES(?,?,?,?)";
-    private String sqlUpdate = "UPDATE USERS A SET A.NAME = ?, A.PASSWORD = ?, A.TELEPHONE = ? WHERE A.ID = ?";
+    private String sqlUpdate = "UPDATE USERS SET NAME = ?, PASSWORD = ?, TELEPHONE = ? WHERE ID = ?";
     private String sqlDelete = "DELETE USERS WHERE ID = ?";
     private String sqlFind = "SELECT * FROM USERS WHERE ID = ?";
     private String sqlFindEmail = "SELECT * FROM USERS WHERE EMAIL LIKE ?";

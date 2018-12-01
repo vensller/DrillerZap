@@ -159,8 +159,9 @@ public class UserSocketThread extends Thread{
     private Message getUserUpdateMessage(Message message){
         User user = (User) message.getMessage();
         User dbUser = (User) userDao.getObjByUnique(user.getEmail()); 
+        user.setID(dbUser.getID());
         if (dbUser != null){
-            userDao.update(dbUser);
+            userDao.update(user);
             return new Message(MessageType.UPDATESUCESS, "");
         }
         return new Message(MessageType.UPDATEFAIL, "Usuário não encontrado!");

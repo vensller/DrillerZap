@@ -69,10 +69,10 @@ public class ContactDao implements Dao{
         Connection con = ConnectionFactory.getConnection();
         try {
             PreparedStatement stmt = con.prepareStatement(sqlFindContacts);
-            stmt.setString(1, whereCondition);
+            stmt.setInt(1, Integer.parseInt(whereCondition));
             ResultSet rs = stmt.executeQuery();
             while (rs.next()){
-                User user = (User) userDao.getObjById(rs.getString("id_contact"));
+                User user = (User) userDao.getObjById(rs.getInt("id_contact") +"");
                 if (user != null){
                     contacts.add(user);
                 }
