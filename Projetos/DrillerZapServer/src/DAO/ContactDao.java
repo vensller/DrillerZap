@@ -92,19 +92,16 @@ public class ContactDao implements Dao{
 
     @Override
     public Object getObjByUnique(String whereUnique) {
-        User user = null;
+        Contact contact = null;
         
         Connection con = ConnectionFactory.getConnection();
         try {
             PreparedStatement stmt = con.prepareStatement(sqlFindUnique + whereUnique);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                user = new User();
-                user.setID(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                user.setTelephone(rs.getString("telephone"));
-                user.setPassword(rs.getString("password"));                
+                contact = new Contact();
+                contact.setUser((User) userDao.getObjById(rs.getInt("id_user") +""));
+                contact.setContact((User) userDao.getObjById(rs.getInt("id_contact") +""));                
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -116,7 +113,7 @@ public class ContactDao implements Dao{
             }
         }
         
-        return user;
+        return contact;
     }
     
 }
