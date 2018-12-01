@@ -126,6 +126,8 @@ public class UserSocketThread extends Thread{
         if (dbUser != null){
             if (dbUser.getPassword().trim().equals(user.getPassword().trim())){
                 UserConfig userCfg = new UserConfig(dbUser, socket.getRemoteSocketAddress().toString(), socket.getPort());
+                Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
+                userCfg.getUser().setContacts((ArrayList<User>) msg.getMessage());
                 ServerConfig.getInstance().addUser(userCfg);
                 return new Message(MessageType.USERLOGGED, userCfg);
             }else return new Message(MessageType.USERNOTLOGGED, "Senha não confere!");
