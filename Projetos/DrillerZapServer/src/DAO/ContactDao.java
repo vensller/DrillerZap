@@ -20,6 +20,7 @@ public class ContactDao implements Dao{
     private String sqlFindContacts = "SELECT * FROM CONTACT A WHERE A.ID_USER = ?";
     private String sqlInsert = "INSERT INTO CONTACT (ID_USER, ID_CONTACT) VALUES (?, ?)";
     private String sqlDelete = "DELETE CONTACT WHERE ID_USER = ? AND ID_CONTACT = ?";
+    private String sqlFindUnique = "SELECT * FROM CONTACT A WHERE A.ID_USER = ";
     private UserDao userDao;
     
     public ContactDao(){
@@ -91,7 +92,28 @@ public class ContactDao implements Dao{
 
     @Override
     public Object getObjByUnique(String whereUnique) {
-        return null;
+        Contact contact = null;
+        
+        Connection con = ConnectionFactory.getConnection();
+        try {
+            PreparedStatement stmt = con.prepareStatement(sqlFindUnique + whereUnique);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){
+                contact = new Contact();
+                contact.setUser((User) userDao.getObjById(rs.getInt("id_user") +""));
+                contact.setContact((User) userDao.getObjById(rs.getInt("id_contact") +""));                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return contact;
     }
     
 }

@@ -11,6 +11,10 @@ public class Contact implements Serializable{
     
     private User user;
     private User contact;
+    
+    public Contact(){
+        
+    }
 
     public Contact(User user, User contact) {
         this.user = user;

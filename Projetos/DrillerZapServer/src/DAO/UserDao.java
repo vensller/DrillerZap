@@ -76,14 +76,15 @@ public class UserDao implements Dao{
 
     @Override
     public Object getObjById(String id) {
-         User user = null;
+        User user = null;
         
         Connection con = ConnectionFactory.getConnection();
         try {
             PreparedStatement stmt = con.prepareStatement(sqlFind);
-            stmt.setString(1, id);
+            stmt.setInt(1, Integer.parseInt(id));
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
+                user = new User();
                 user.setID(rs.getInt("id"));
                 user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
