@@ -88,8 +88,12 @@ public class UserSocketThread extends Thread{
     
     private Message getRemoveContactMessage(Message message){
         Contact contact = (Contact) message.getMessage();
+        User user = (User) userDao.getObjByUnique(contact.getUser().getEmail());
+        User userContact = (User) userDao.getObjByUnique(contact.getContact().getEmail());
+        contact.setUser(user);
+        contact.setContact(userContact);
         contactDao.delete(contact);
-        return null;
+        return new Message(MessageType.REMOVECONTACTSUCESS, "Contato removido com sucesso!");
     }
     
     private Message getRegisterContactMessage(Message message){
@@ -152,8 +156,9 @@ public class UserSocketThread extends Thread{
     
     private Message getUserUpdateMessage(Message message){
         User user = (User) message.getMessage();
-        if (userDao.getObjByUnique(user.getEmail()) != null){
-            userDao.update(user);
+        User dbUser = (User) userDao.getObjByUnique(user.getEmail()); 
+        if (dbUser != null){
+            userDao.update(dbUser);
             return new Message(MessageType.UPDATESUCESS, "");
         }
         return new Message(MessageType.UPDATEFAIL, "Usuário não encontrado!");

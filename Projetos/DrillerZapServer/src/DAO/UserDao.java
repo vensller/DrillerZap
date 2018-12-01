@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class UserDao implements Dao{
     
     private String sqlInsert = "INSERT INTO USERS (NAME, EMAIL, PASSWORD, TELEPHONE) VALUES(?,?,?,?)";
-    private String sqlUpdate = "UPDATE USERS A SET A.NAME = ?, A.EMAIL = ?, A.PASSWORD = ?, A.TELEPHONE = ? WHERE A.ID = ?";
+    private String sqlUpdate = "UPDATE USERS A SET A.NAME = ?, A.PASSWORD = ?, A.TELEPHONE = ? WHERE A.ID = ?";
     private String sqlDelete = "DELETE USERS WHERE ID = ?";
     private String sqlFind = "SELECT * FROM USERS WHERE ID = ?";
     private String sqlFindEmail = "SELECT * FROM USERS WHERE EMAIL LIKE ?";
@@ -53,6 +53,19 @@ public class UserDao implements Dao{
 
     @Override
     public void update(Object obj) {
+        Connection con = ConnectionFactory.getConnection();
+        User user = (User) obj;
+        try {
+            con.setAutoCommit(true);
+            PreparedStatement stmt = con.prepareStatement(sqlUpdate);
+            stmt.setString(1, user.getName());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getTelephone());
+            stmt.setInt(4, user.getID());
+            stmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 

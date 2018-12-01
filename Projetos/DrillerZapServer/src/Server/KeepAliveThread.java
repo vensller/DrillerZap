@@ -17,7 +17,7 @@ public class KeepAliveThread extends Thread{
     public void run() {
         while (true){
             try {
-                sleep(10000);
+                sleep(15000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(KeepAliveThread.class.getName()).log(Level.SEVERE, null, ex);
             }
