@@ -13,6 +13,7 @@ public class Configuration {
     
     private String address;
     private int port;
+    private User loggedUser;
 
     private static Configuration instance;
 
@@ -41,7 +42,12 @@ public class Configuration {
     public void setPort(int port) {
         this.port = port;
     }
-    
-    
 
+    public User getLoggedUser() {
+        return loggedUser;
+    }
+
+    public void setLoggedUser(User loggedUser) {
+        this.loggedUser = loggedUser;
+    }
 }

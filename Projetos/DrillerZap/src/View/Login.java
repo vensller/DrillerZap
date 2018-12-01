@@ -1,21 +1,25 @@
 package View;
 
+import Controller.LoginObserver;
 import Controller.UserController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.auth.login.Configuration;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author Paulo
  */
-public class Login extends javax.swing.JFrame {
+public class Login extends javax.swing.JFrame implements LoginObserver{
 
-    UserController controller = new UserController();
+    private UserController controller;
 
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
+        controller = new UserController();
+        controller.observLogin(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -177,9 +181,8 @@ public class Login extends javax.swing.JFrame {
                         jTextUser.getText(),
                         jTextPassword.getText());
                 
-                Chat chat = new Chat();
-                chat.setVisible(true);
-                dispose();
+                
+                
                 
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -210,4 +213,18 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField jTextPassword;
     private javax.swing.JTextField jTextUser;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void loginApproved() {
+        JOptionPane.showMessageDialog(rootPane, "Logado com sucesso");
+        Chat chat = new Chat();
+        chat.setVisible(true);
+        dispose();
+    }
+
+    @Override
+    public void loginNotApproved() {
+        JOptionPane.showMessageDialog(rootPane, "Login inválido");
+
+    }
 }
