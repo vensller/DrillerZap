@@ -87,6 +87,8 @@ public class UserSocketThread extends Thread{
     }
     
     private Message getRemoveContactMessage(Message message){
+        Contact contact = (Contact) message.getMessage();
+        contactDao.delete(contact);
         return null;
     }
     
@@ -115,12 +117,14 @@ public class UserSocketThread extends Thread{
     
     private Message getLoginMessage(Message message){
         User user = (User) message.getMessage();
-        User dbUser = (User) userDao.getObjByUnique(user.getEmail());
+        User dbUser = (User) userDao.getObjByUnique(user.getEmail());;
         
         if (dbUser != null){
-            UserConfig userCfg = new UserConfig(dbUser, socket.getRemoteSocketAddress().toString(), socket.getPort());
-            ServerConfig.getInstance().addUser(userCfg);
-            return new Message(MessageType.USERLOGGED, userCfg);
+            if (dbUser.getPassword().trim().equals(user.getPassword().trim())){
+                UserConfig userCfg = new UserConfig(dbUser, socket.getRemoteSocketAddress().toString(), socket.getPort());
+                ServerConfig.getInstance().addUser(userCfg);
+                return new Message(MessageType.USERLOGGED, userCfg);
+            }else return new Message(MessageType.USERNOTLOGGED, "Senha não confere!");
         }else return new Message(MessageType.USERNOTLOGGED, "Email não está cadastrado!");                
     }
     

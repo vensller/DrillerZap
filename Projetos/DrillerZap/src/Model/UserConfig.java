@@ -5,6 +5,7 @@ package Model;
  * @author Ivens
  */
 public class UserConfig {
+    private static final long serialVersionUID = 75264722956227547L;
     
     private User user;
     private String ip;
