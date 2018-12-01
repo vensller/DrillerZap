@@ -4,6 +4,7 @@ import Model.User;
 import Model.Configuration;
 import Model.Message;
 import Model.MessageType;
+import Model.UserConfig;
 import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -111,6 +112,8 @@ public class UserController {
             if (msgApproved.getType() == MessageType.USERLOGGED) {
 
                 loginApproved();
+                
+                Configuration.getInstance().setLoggedUser((UserConfig) msgApproved.getMessage());
 
             } else {
                 loginNoApproved();
