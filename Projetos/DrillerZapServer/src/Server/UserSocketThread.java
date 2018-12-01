@@ -66,8 +66,7 @@ public class UserSocketThread extends Thread{
     private Message processMessage(Message msg){        
         User user = (User) msg.getMessage();
         switch (msg.getType()){
-            case ALIVE :
-                
+            case ALIVE :                
                 break;
             case DOLOGIN :
                 return getLoginMessage(user);
@@ -77,9 +76,17 @@ public class UserSocketThread extends Thread{
                 return getUserContactsMessage(user);
             case REGISTER :
                 return getRegisterMessage(user);
+            case UPDATEUSER :
+                return getUserUpdateMessage(user);
+            case REGISTERCONTACT :
+                
             default : System.out.println("WRONG MESSAGE TYPE RECEIVED! " + msg.toString());
         }
         
+        return null;
+    }
+    
+    private Message getRegisterContactMessage(User user, User contact){
         return null;
     }
     
@@ -118,6 +125,14 @@ public class UserSocketThread extends Thread{
         }
         
         return new Message(MessageType.SENDCONTACTS, userContacts);
+    }
+    
+    private Message getUserUpdateMessage(User user){
+        if (userDao.getObjByUnique(user.getEmail()) != null){
+            userDao.update(user);
+            return new Message(MessageType.UPDATESUCESS, "");
+        }
+        return new Message(MessageType.UPDATEFAIL, "Usuário não encontrado!");
     }
     
     
