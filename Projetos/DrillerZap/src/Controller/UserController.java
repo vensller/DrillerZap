@@ -33,6 +33,7 @@ public class UserController {
         observers = new ArrayList<>();
         loginObservers = new ArrayList<>();
         updateObserves = new ArrayList<>();
+        addContactObservers = new ArrayList<>();
 
     }
 
@@ -271,7 +272,7 @@ public class UserController {
 
     }
 
-    public void observUpdate(AddContactObserver obs) {
+    public void observAddContact(AddContactObserver obs) {
         addContactObservers.add(obs);
     }
 

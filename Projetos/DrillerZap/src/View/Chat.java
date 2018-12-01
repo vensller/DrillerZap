@@ -18,6 +18,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver{
         initComponents();
         this.setLocationRelativeTo(null);
         controller = new UserController();
+        controller.observAddContact(this);
 
     }
 
@@ -223,11 +224,15 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver{
 
     private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
     String email = JOptionPane.showInputDialog("Informa o e-mail do contato");
+    if(email != null){
         try {
             controller.addContact(email);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
+            
+    }
+
     
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
