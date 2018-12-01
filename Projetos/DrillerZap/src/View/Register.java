@@ -206,9 +206,7 @@ public class Register extends javax.swing.JFrame implements ApprovedObserver{
                 Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            Login login = new Login();
-            login.setVisible(true);
-            dispose();
+    
         } else {
             JOptionPane.showMessageDialog(rootPane, "Alguns dos campos não foi informado");
         }

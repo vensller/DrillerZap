@@ -190,7 +190,6 @@ public class Login extends javax.swing.JFrame {
     private void jButtonCadastraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastraActionPerformed
         Register teste = new Register();
         teste.setVisible(true);
-        dispose();
     }//GEN-LAST:event_jButtonCadastraActionPerformed
 
     private void jButtonConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigurationActionPerformed
