@@ -7,6 +7,7 @@ import Model.Configuration;
 import Model.Contact;
 import Model.ListMessages;
 import Model.Message;
+import Model.MessageModel;
 import Model.MessageType;
 import Model.MessagesObserver;
 import Model.UserConfig;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author Paulo
  */
-public class UserController implements MessagesObserver{
+public class UserController implements MessagesObserver {
 
     private List<ApprovedObserver> observers;
     private List<LoginObserver> loginObservers;
@@ -119,7 +120,7 @@ public class UserController implements MessagesObserver{
                 Configuration.getInstance().setLoggedUser((UserConfig) msgApproved.getMessage());
                 CommunicationSocket socketThread = new CommunicationSocket();
                 socketThread.start();
-                loginApproved();                           
+                loginApproved();
             } else {
                 loginNoApproved();
             }
@@ -210,10 +211,10 @@ public class UserController implements MessagesObserver{
     public void observUpdate(UpdateObserver obs) {
         updateObserves.add(obs);
     }
-    
+
     public void addContact(String email) throws ClassNotFoundException {
         try {
-            
+
             User user = new User();
             user.setEmail(email);
             Contact contact = new Contact(Configuration.getInstance().getLoggedUser().getUser(), user);
@@ -233,7 +234,7 @@ public class UserController implements MessagesObserver{
 
             output.close();
             input.close();
-            
+
             if (msgApproved.getType() == MessageType.CONTACTREGISTERED) {
                 output = new ObjectOutputStream(socket.getOutputStream());
                 input = new ObjectInputStream(socket.getInputStream());
@@ -242,10 +243,10 @@ public class UserController implements MessagesObserver{
                 output.flush();
                 ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) input.readObject();
                 Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
-                addContactApproved();                
+                addContactApproved();
                 processContacts();
                 processAliveContacts();
-                
+
             } else {
                 addContactNoApproved((String) msgApproved.getMessage());
             }
@@ -258,7 +259,7 @@ public class UserController implements MessagesObserver{
         }
 
     }
-    
+
     public void addContactApproved() {
         for (AddContactObserver obs : addContactObservers) {
             obs.addContactApproved();
@@ -272,27 +273,27 @@ public class UserController implements MessagesObserver{
         }
 
     }
-    
-    public void notifyAddContact(String email){
-        for (AddContactObserver obs : addContactObservers){
+
+    public void notifyAddContact(String email) {
+        for (AddContactObserver obs : addContactObservers) {
             obs.receiveContact(email);
         }
     }
-    
-    public void notifyRemoveContact(String email){
-        for (AddContactObserver obs : addContactObservers){
+
+    public void notifyRemoveContact(String email) {
+        for (AddContactObserver obs : addContactObservers) {
             obs.removeContact(email);
         }
     }
-    
-    public void notifyContactAlive(String email, List<String> messages){
-        for (AddContactObserver obs : addContactObservers){
+
+    public void notifyContactAlive(String email, List<String> messages) {
+        for (AddContactObserver obs : addContactObservers) {
             obs.contactAlive(email, true, messages);
         }
     }
-    
-    public void notifyContactNotAlive(String email){
-        for (AddContactObserver obs : addContactObservers){
+
+    public void notifyContactNotAlive(String email) {
+        for (AddContactObserver obs : addContactObservers) {
             obs.contactAlive(email, false, null);
         }
     }
@@ -300,54 +301,73 @@ public class UserController implements MessagesObserver{
     public void observAddContact(AddContactObserver obs) {
         addContactObservers.add(obs);
     }
-    
-    public void processContacts(){
+
+    public void processContacts() {
         for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()) {
             notifyAddContact(user.getUser().getEmail());
         }
-        
+
     }
 
     public void processAliveContacts() {
-        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
-            if (user.isLogged()){
+        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()) {
+            if (user.isLogged()) {
                 ChatMessages contactMessages = new ChatMessages(user, new ListMessages(user.getUser(), "", null));
                 notifyContactAlive(user.getUser().getEmail(), contactMessages.getListMessages());
+            } else {
+                notifyContactNotAlive(user.getUser().getEmail());
             }
-            else notifyContactNotAlive(user.getUser().getEmail());
         }
     }
 
     @Override
     public void messageReceived(String contactEmail, String message) {
-        for (AddContactObserver obs : addContactObservers){
+        for (AddContactObserver obs : addContactObservers) {
             obs.messageReceived(contactEmail, message);
         }
     }
 
     @Override
-    public void messageSend(String contactEmail, String message) {        
-        
+    public void messageSend(String contactEmail, String message) {
+
     }
-    
-     public boolean AliveContacts(String email) {
-         boolean alive = false;
-        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
-            if (user.getUser().getEmail().equals(email)){
-                alive  = user.isLogged();
+
+    public boolean AliveContacts(String email) {
+        boolean alive = false;
+        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()) {
+            if (user.getUser().getEmail().equals(email)) {
+                alive = user.isLogged();
             }
         }
         return alive;
     }
-     
-     public UserConfig returnUser(String email) {
-         UserConfig u = null;
-        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
-            if (user.getUser().getEmail().equals(email)){
-            u = new UserConfig(user.getUser(), user.getIp(), user.getPort(), user.isLogged());
+
+    public UserConfig returnUser(String email) {
+        UserConfig u = null;
+        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()) {
+            if (user.getUser().getEmail().equals(email)) {
+                u = new UserConfig(user.getUser(), user.getIp(), user.getPort(), user.isLogged());
             }
         }
         return u;
+    }
+
+    public void sendMessage(UserConfig from, UserConfig to, String message) throws IOException {
+        Socket socket = new Socket(to.getIp(), to.getPort());
+        socket.setReuseAddress(true);
+
+        ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+        
+        MessageModel msg = new MessageModel(from, to, message);
+        output.writeObject(msg);
+        output.flush();
+
+
+        output.close();
+        input.close();
+        socket.close();
+
     }
 
 }

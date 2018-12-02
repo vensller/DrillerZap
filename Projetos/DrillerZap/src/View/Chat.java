@@ -2,8 +2,10 @@ package View;
 
 import Controller.AddContactObserver;
 import Controller.UserController;
+import Model.Configuration;
 import Model.UserConfig;
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -312,14 +314,17 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
     private void jButtonEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnviarActionPerformed
-
+        try {
+            controller.sendMessage(Configuration.getInstance().getLoggedUser(), controller.returnUser((String) model.getElementAt(jListContatos.getSelectedIndex())), jTextAreaMensagem.getText());
+        } catch (IOException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_jButtonEnviarActionPerformed
 
     private void jListContatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListContatosMouseClicked
      listContactOnline(jListContatos.getSelectedIndex());
-     UserConfig u = controller.returnUser((String) model.getElementAt(jListContatos.getSelectedIndex()));
-        System.out.println(u.getIp());
+
     }//GEN-LAST:event_jListContatosMouseClicked
 
     private void jButtonLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLimparActionPerformed

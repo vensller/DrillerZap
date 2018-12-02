@@ -6,29 +6,29 @@ package Model;
  */
 public class MessageModel {
     
-    private User from;
-    private User to;
+    private UserConfig from;
+    private UserConfig to;
     private String message;
 
-    public MessageModel(User from, User to, String message) {
+    public MessageModel(UserConfig from, UserConfig to, String message) {
         this.from = from;
         this.to = to;
         this.message = message;
     }
 
-    public User getFrom() {
+    public UserConfig getFrom() {
         return from;
     }
 
-    public void setFrom(User from) {
+    public void setFrom(UserConfig from) {
         this.from = from;
     }
 
-    public User getTo() {
+    public UserConfig getTo() {
         return to;
     }
 
-    public void setTo(User to) {
+    public void setTo(UserConfig to) {
         this.to = to;
     }
 
