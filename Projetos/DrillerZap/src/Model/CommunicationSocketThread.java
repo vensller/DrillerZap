@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,9 +15,11 @@ import java.util.logging.Logger;
 public class CommunicationSocketThread extends Thread{
 
     private Socket socket;
+    private List<MessagesObserver> messagesObserverList;
 
-    public CommunicationSocketThread(Socket socket) {
+    public CommunicationSocketThread(Socket socket, List<MessagesObserver> messagesObserverList) {
         this.socket = socket;
+        this.messagesObserverList = messagesObserverList;
     }
     
     @Override
@@ -31,7 +34,11 @@ public class CommunicationSocketThread extends Thread{
                 output.writeObject(new Message(MessageType.ALIVE, ""));
                 output.flush();
             }else if (msg.getType() == MessageType.USERMESSAGE){
+                MessageModel message = (MessageModel) msg.getMessage();
                 
+                for (MessagesObserver obs : messagesObserverList){
+                    obs.messageReceived(message.getFrom().getEmail(), message.getMessage());
+                }
             }
             
             output.close();

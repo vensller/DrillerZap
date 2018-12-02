@@ -8,6 +8,7 @@ import Model.Contact;
 import Model.ListMessages;
 import Model.Message;
 import Model.MessageType;
+import Model.MessagesObserver;
 import Model.UserConfig;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Paulo
  */
-public class UserController{
+public class UserController implements MessagesObserver{
 
     private List<ApprovedObserver> observers;
     private List<LoginObserver> loginObservers;
@@ -315,6 +316,18 @@ public class UserController{
             }
             else notifyContactNotAlive(user.getUser().getEmail());
         }
+    }
+
+    @Override
+    public void messageReceived(String contactEmail, String message) {
+        for (AddContactObserver obs : addContactObservers){
+            obs.messageReceived(contactEmail, message);
+        }
+    }
+
+    @Override
+    public void messageSend(String contactEmail, String message) {        
+        
     }
 
 }

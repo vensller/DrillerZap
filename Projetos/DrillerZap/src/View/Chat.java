@@ -322,4 +322,9 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     @Override
     public void contactAlive(String email, boolean alive, List<String> messages) {        
     }
+
+    @Override
+    public void messageReceived(String emailContact, String message) {
+        
+    }
 }

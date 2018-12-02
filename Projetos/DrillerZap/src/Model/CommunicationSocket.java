@@ -3,6 +3,8 @@ package Model;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +13,16 @@ import java.util.logging.Logger;
  * @author Ivens
  */
 public class CommunicationSocket extends Thread{
+    
+    private List<MessagesObserver> messagesObserverList;
+
+    public CommunicationSocket() {
+        messagesObserverList = new ArrayList<>();
+    }
+    
+    public void observ(MessagesObserver obs){
+        messagesObserverList.add(obs);
+    }
 
     @Override
     public void run() {        
@@ -19,7 +31,7 @@ public class CommunicationSocket extends Thread{
             serverSocket.setReuseAddress(true);
             while (true) {
                 Socket socket = serverSocket.accept();
-                CommunicationSocketThread thread = new CommunicationSocketThread(socket);
+                CommunicationSocketThread thread = new CommunicationSocketThread(socket, messagesObserverList);
                 thread.start();
             }
         } catch (IOException ex) {
