@@ -246,7 +246,7 @@ public class UserController {
                 
 
             } else {
-                addContactNoApproved();
+                addContactNoApproved((String) msgApproved.getMessage());
             }
 
             socket.close();
@@ -265,9 +265,9 @@ public class UserController {
 
     }
 
-    public void addContactNoApproved() {
+    public void addContactNoApproved(String error) {
         for (AddContactObserver obs : addContactObservers) {
-            obs.addContactNotApproved();
+            obs.addContactNotApproved(error);
         }
 
     }

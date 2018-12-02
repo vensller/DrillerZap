@@ -125,7 +125,7 @@ public class UserSocketThread extends Thread{
         
         if (dbUser != null){
             if (dbUser.getPassword().trim().equals(user.getPassword().trim())){
-                UserConfig userCfg = new UserConfig(dbUser, socket.getRemoteSocketAddress().toString(), socket.getPort(), true);
+                UserConfig userCfg = new UserConfig(dbUser, socket.getInetAddress().toString(), socket.getPort(), true);
                 Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
                 userCfg.getUser().setContacts((ArrayList<UserConfig>) msg.getMessage());
                 ServerConfig.getInstance().addUser(userCfg);

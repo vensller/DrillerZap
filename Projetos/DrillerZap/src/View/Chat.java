@@ -262,7 +262,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver{
     }
 
     @Override
-    public void addContactNotApproved() {
-        JOptionPane.showMessageDialog(rootPane, "Contato não encontrado!");
+    public void addContactNotApproved(String error) {
+        JOptionPane.showMessageDialog(rootPane, error);
     }
 }
