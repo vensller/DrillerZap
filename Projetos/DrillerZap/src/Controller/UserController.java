@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.ChatMessages;
+import Model.CommunicationSocket;
 import Model.User;
 import Model.Configuration;
 import Model.Contact;
@@ -22,7 +23,7 @@ import java.util.logging.Logger;
  *
  * @author Paulo
  */
-public class UserController {
+public class UserController{
 
     private List<ApprovedObserver> observers;
     private List<LoginObserver> loginObservers;
@@ -115,6 +116,8 @@ public class UserController {
 
             if (msgApproved.getType() == MessageType.USERLOGGED) {
                 Configuration.getInstance().setLoggedUser((UserConfig) msgApproved.getMessage());
+                CommunicationSocket socketThread = new CommunicationSocket();
+                socketThread.start();
                 loginApproved();                           
             } else {
                 loginNoApproved();
