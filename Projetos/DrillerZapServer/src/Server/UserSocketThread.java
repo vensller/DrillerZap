@@ -133,6 +133,8 @@ public class UserSocketThread extends Thread{
                 Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
                 userCfg.getUser().setContacts((ArrayList<UserConfig>) msg.getMessage());
                 ServerConfig.getInstance().addUser(userCfg);
+                CommunicateContacts thread = new CommunicateContacts(userCfg, true);
+                thread.start();
                 return new Message(MessageType.USERLOGGED, userCfg);
             }else return new Message(MessageType.USERNOTLOGGED, "Senha não confere!");
         }else return new Message(MessageType.USERNOTLOGGED, "Email não está cadastrado!");                

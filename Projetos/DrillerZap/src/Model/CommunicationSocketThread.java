@@ -42,10 +42,10 @@ public class CommunicationSocketThread extends Thread{
                     }
                     break;
                 case CONTACTNOTALIVE :
-                    Contact contact = (Contact) msg.getMessage();
+                    UserConfig contact = (UserConfig) msg.getMessage();
                     
                     for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
-                        if (user.getUser().getEmail().equals(contact.getContact().getEmail())){
+                        if (user.getUser().getEmail().equals(contact.getUser().getEmail())){
                             user.setIsLogged(false);
                             user.setIp("");
                             user.setPort(0);
@@ -53,6 +53,16 @@ public class CommunicationSocketThread extends Thread{
                     }
                     
                     break;
+                case CONTACTALIVE :
+                    UserConfig contactAlive = (UserConfig) msg.getMessage();
+                    
+                    for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
+                        if (user.getUser().getEmail().equals(contactAlive.getUser().getEmail())){
+                            user.setIsLogged(true);
+                            user.setIp(contactAlive.getIp());
+                            user.setPort(contactAlive.getPort());
+                        }
+                    }
                 default : break;
             }                    
             

@@ -2,6 +2,7 @@ package Server;
 
 import Model.Message;
 import Model.MessageType;
+import Model.ServerConfig;
 import Model.UserConfig;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,9 +20,11 @@ import java.util.logging.Logger;
 public class CommunicateContacts extends Thread {
 
     private UserConfig user;
+    private boolean alive;
 
-    public CommunicateContacts(UserConfig userNotAlive) {
-        this.user = userNotAlive;
+    public CommunicateContacts(UserConfig user, boolean alive) {
+        this.user = user;
+        this.alive = alive;
     }
 
     @Override
@@ -36,8 +39,13 @@ public class CommunicateContacts extends Thread {
                     socket.setSoTimeout(2000);
                     ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
                     ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+                    
+                    Message message;
 
-                    Message message = new Message(MessageType.CONTACTNOTALIVE, user);
+                    if (alive)
+                        message = new Message(MessageType.CONTACTALIVE, user);
+                    else message = new Message(MessageType.CONTACTNOTALIVE, user);
+                    
                     output.writeObject(message);
                     output.flush();
 
