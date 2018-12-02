@@ -113,12 +113,8 @@ public class UserController {
             Message msgApproved = (Message) obj;
 
             if (msgApproved.getType() == MessageType.USERLOGGED) {
-
-                loginApproved();
-                
                 Configuration.getInstance().setLoggedUser((UserConfig) msgApproved.getMessage());
-                
-
+                loginApproved();                           
             } else {
                 loginNoApproved();
             }
@@ -271,9 +267,48 @@ public class UserController {
         }
 
     }
+    
+    public void notifyAddContact(String email){
+        for (AddContactObserver obs : addContactObservers){
+            obs.receiveContact(email);
+        }
+    }
+    
+    public void notifyRemoveContact(String email){
+        for (AddContactObserver obs : addContactObservers){
+            obs.removeContact(email);
+        }
+    }
+    
+    public void notifyContactAlive(String email){
+        for (AddContactObserver obs : addContactObservers){
+            obs.contactAlive(email, true);
+        }
+    }
+    
+    public void notifyContactNotAlive(String email){
+        for (AddContactObserver obs : addContactObservers){
+            obs.contactAlive(email, false);
+        }
+    }
 
     public void observAddContact(AddContactObserver obs) {
         addContactObservers.add(obs);
+    }
+    
+    public void processContacts(){
+        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()) {
+            notifyAddContact(user.getUser().getEmail());
+        }
+        
+    }
+
+    public void processAliveContacts() {
+        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
+            if (user.isLogged())
+                notifyContactAlive(user.getUser().getEmail());
+            else notifyContactNotAlive(user.getUser().getEmail());
+        }
     }
 
 }

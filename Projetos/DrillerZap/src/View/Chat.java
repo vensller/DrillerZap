@@ -4,22 +4,27 @@ import Controller.AddContactObserver;
 import Controller.UserController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author Paulo
  */
-public class Chat extends javax.swing.JFrame implements AddContactObserver{
+public class Chat extends javax.swing.JFrame implements AddContactObserver {
 
     private UserController controller;
-    
+    private DefaultListModel model;
+
     public Chat() {
         initComponents();
-        this.setLocationRelativeTo(null);
-        controller = new UserController();
-        controller.observAddContact(this);
-
+        this.setLocationRelativeTo(null);        
+        model = new DefaultListModel();
+        this.jListContatos.setModel(model);
+        controller = new UserController();        
+        controller.observAddContact(this);                
+        controller.processContacts();
+        controller.processAliveContacts();
     }
 
     @SuppressWarnings("unchecked")
@@ -218,25 +223,24 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
-    UserUpdate perfil = new UserUpdate();
-    perfil.setVisible(true);
+        UserUpdate perfil = new UserUpdate();
+        perfil.setVisible(true);
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
     private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
-    String email = JOptionPane.showInputDialog("Informa o e-mail do contato");
-    if(email != null){
-        try {
-            controller.addContact(email);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-    }
+        String email = JOptionPane.showInputDialog("Informa o e-mail do contato");
+        if (email != null) {
+            try {
+                controller.addContact(email);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-    
+        }
+
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdicionar;
     private javax.swing.JButton jButtonEnviar;
@@ -264,5 +268,21 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver{
     @Override
     public void addContactNotApproved(String error) {
         JOptionPane.showMessageDialog(rootPane, error);
+    }
+
+    @Override
+    public void receiveContact(String email) {
+        model.addElement(email);
+        jListContatos.repaint();
+    }
+
+    @Override
+    public void removeContact(String email) {
+        model.removeElement(email);
+        jListContatos.repaint();
+    }
+
+    @Override
+    public void contactAlive(String email, boolean alive) {        
     }
 }
