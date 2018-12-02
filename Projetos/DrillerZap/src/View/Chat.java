@@ -2,6 +2,7 @@ package View;
 
 import Controller.AddContactObserver;
 import Controller.UserController;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +25,12 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
 
     public Chat() {
         initComponents();
-        this.setLocationRelativeTo(null);                        
+        this.setLocationRelativeTo(null);
         addListeners();
-        init();        
+        init();
     }
-    
-    private void init(){
+
+    private void init() {
         jTextAreaChat.setText("Bem vindo ao DrillerZap!\n"
                 + "Desenvolvido por: \n"
                 + "- Ivens Diego Müller.\n"
@@ -37,31 +38,48 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         this.messages = new HashMap<>();
         this.model = new DefaultListModel();
         this.jListContatos.setModel(model);
-        controller = new UserController();        
-        controller.observAddContact(this);                
+        controller = new UserController();
+        controller.observAddContact(this);
         controller.processContacts();
         controller.processAliveContacts();
+
     }
-    
-    private void addListeners(){
+
+    private void listContactOnline(int x) {
+        if (x > -1) {
+            boolean alive = controller.AliveContacts((String) model.getElementAt(x));
+            if (alive == false) {
+                jListContatos.setSelectionForeground(Color.RED);
+                jButtonEnviar.setEnabled(false);
+                jTextAreaMensagem.setEnabled(false);
+            }else{
+                jListContatos.setSelectionForeground(Color.GREEN);
+                 jButtonEnviar.setEnabled(true);
+                jTextAreaMensagem.setEnabled(true);
+            }
+        }
+    }
+
+    private void addListeners() {
         jListContatos.addListSelectionListener(new ListSelectionListener() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {                
+            public void valueChanged(ListSelectionEvent e) {
                 processMessages((String) model.getElementAt(jListContatos.getSelectedIndex()));
+
             }
         });
     }
-    
-    private void processMessages(String email){
-        jTextAreaChat.setText("");        
+
+    private void processMessages(String email) {
+        jTextAreaChat.setText("");
         List<String> chat = messages.get(email);
-        if (chat != null){            
-            for (String s : chat){
+        if (chat != null) {
+            for (String s : chat) {
                 jTextAreaChat.append(s + "\n");
             }
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -114,6 +132,13 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Contatos"));
         jPanel3.setToolTipText("");
 
+        jListContatos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListContatos.setSelectionBackground(new java.awt.Color(255, 255, 255));
+        jListContatos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListContatosMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(jListContatos);
 
         jButtonAdicionar.setText("Adicionar");
@@ -175,6 +200,11 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         jScrollPane2.setViewportView(jTextAreaMensagem);
 
         jButtonEnviar.setText("Enviar");
+        jButtonEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEnviarActionPerformed(evt);
+            }
+        });
 
         jButtonLimpar.setText("Limpar");
 
@@ -275,6 +305,15 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
 
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
+    private void jButtonEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnviarActionPerformed
+
+
+    }//GEN-LAST:event_jButtonEnviarActionPerformed
+
+    private void jListContatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListContatosMouseClicked
+     listContactOnline(jListContatos.getSelectedIndex());
+    }//GEN-LAST:event_jListContatosMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdicionar;
@@ -320,11 +359,13 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     }
 
     @Override
-    public void contactAlive(String email, boolean alive, List<String> messages) {        
+    public void contactAlive(String email, boolean alive, List<String> messages) {
+        System.out.println(alive);
+
     }
 
     @Override
     public void messageReceived(String emailContact, String message) {
-        
+
     }
 }

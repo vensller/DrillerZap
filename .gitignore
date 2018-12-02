@@ -4,3 +4,5 @@
 /Projetos/DrillerZap/build/
 /Projetos/DrillerZapServer/build/
 /Projetos/DrillerZapServer/dist/
+Projetos/DrillerZapServer/src/DAO/ConnectionFactory.java
+Projetos/DrillerZap/src/View/ConfigView.java

@@ -329,5 +329,15 @@ public class UserController implements MessagesObserver{
     public void messageSend(String contactEmail, String message) {        
         
     }
+    
+     public boolean AliveContacts(String email) {
+         boolean alive = false;
+        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
+            if (user.getUser().getEmail().equals(email)){
+                alive  = user.isLogged();
+            }
+        }
+        return alive;
+    }
 
 }
