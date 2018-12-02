@@ -127,16 +127,11 @@ public class UserSocketThread extends Thread{
         
         if (dbUser != null){
             if (dbUser.getPassword().trim().equals(user.getPassword().trim())){                
-                try {
-                    UserConfig userCfg = new UserConfig(dbUser, socket.getChannel().getLocalAddress().toString(), 56001, true);
-                    Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
-                    userCfg.getUser().setContacts((ArrayList<UserConfig>) msg.getMessage());
-                    ServerConfig.getInstance().addUser(userCfg);
-                    return new Message(MessageType.USERLOGGED, userCfg);
-                } catch (IOException ex) {
-                    Logger.getLogger(UserSocketThread.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
-                }                                
+                UserConfig userCfg = new UserConfig(dbUser, socket.getLocalSocketAddress().toString(), 56001, true);
+                Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
+                userCfg.getUser().setContacts((ArrayList<UserConfig>) msg.getMessage());
+                ServerConfig.getInstance().addUser(userCfg);
+                return new Message(MessageType.USERLOGGED, userCfg);
             }else return new Message(MessageType.USERNOTLOGGED, "Senha não confere!");
         }else return new Message(MessageType.USERNOTLOGGED, "Email não está cadastrado!");                
     }
