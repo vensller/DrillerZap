@@ -2,10 +2,15 @@ package View;
 
 import Controller.AddContactObserver;
 import Controller.UserController;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -15,18 +20,48 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
 
     private UserController controller;
     private DefaultListModel model;
+    private HashMap<String, List<String>> messages;
 
     public Chat() {
         initComponents();
-        this.setLocationRelativeTo(null);        
-        model = new DefaultListModel();
+        this.setLocationRelativeTo(null);                        
+        addListeners();
+        init();        
+    }
+    
+    private void init(){
+        jTextAreaChat.setText("Bem vindo ao DrillerZap!\n"
+                + "Desenvolvido por: \n"
+                + "- Ivens Diego Müller.\n"
+                + "- Paulo Henrique Rodrigues.");
+        this.messages = new HashMap<>();
+        this.model = new DefaultListModel();
         this.jListContatos.setModel(model);
         controller = new UserController();        
         controller.observAddContact(this);                
         controller.processContacts();
         controller.processAliveContacts();
     }
-
+    
+    private void addListeners(){
+        jListContatos.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {                
+                processMessages((String) model.getElementAt(jListContatos.getSelectedIndex()));
+            }
+        });
+    }
+    
+    private void processMessages(String email){
+        jTextAreaChat.setText("");        
+        List<String> chat = messages.get(email);
+        if (chat != null){            
+            for (String s : chat){
+                jTextAreaChat.append(s + "\n");
+            }
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -56,7 +91,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
 
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("DrillerZAp");
+        jLabel2.setText("DrillerZap");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -273,16 +308,18 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     @Override
     public void receiveContact(String email) {
         model.addElement(email);
+        messages.put(email, new ArrayList<String>());
         jListContatos.repaint();
     }
 
     @Override
     public void removeContact(String email) {
         model.removeElement(email);
+        messages.remove(email);
         jListContatos.repaint();
     }
 
     @Override
-    public void contactAlive(String email, boolean alive) {        
+    public void contactAlive(String email, boolean alive, List<String> messages) {        
     }
 }

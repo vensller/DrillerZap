@@ -1,18 +1,18 @@
 package Controller;
 
+import Model.ChatMessages;
 import Model.User;
 import Model.Configuration;
 import Model.Contact;
+import Model.ListMessages;
 import Model.Message;
 import Model.MessageType;
 import Model.UserConfig;
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,13 +28,14 @@ public class UserController {
     private List<LoginObserver> loginObservers;
     private List<UpdateObserver> updateObserves;
     private List<AddContactObserver> addContactObservers;
+    private List<ChatMessages> chatMessages;
 
     public UserController() {
         observers = new ArrayList<>();
         loginObservers = new ArrayList<>();
         updateObserves = new ArrayList<>();
         addContactObservers = new ArrayList<>();
-
+        chatMessages = new ArrayList<>();
     }
 
     public void submitUserToServer(String name, String email, String telephone, String password) throws ClassNotFoundException {
@@ -280,15 +281,15 @@ public class UserController {
         }
     }
     
-    public void notifyContactAlive(String email){
+    public void notifyContactAlive(String email, List<String> messages){
         for (AddContactObserver obs : addContactObservers){
-            obs.contactAlive(email, true);
+            obs.contactAlive(email, true, messages);
         }
     }
     
     public void notifyContactNotAlive(String email){
         for (AddContactObserver obs : addContactObservers){
-            obs.contactAlive(email, false);
+            obs.contactAlive(email, false, null);
         }
     }
 
@@ -305,8 +306,10 @@ public class UserController {
 
     public void processAliveContacts() {
         for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
-            if (user.isLogged())
-                notifyContactAlive(user.getUser().getEmail());
+            if (user.isLogged()){
+                ChatMessages contactMessages = new ChatMessages(user, new ListMessages(user.getUser(), "", null));
+                notifyContactAlive(user.getUser().getEmail(), contactMessages.getListMessages());
+            }
             else notifyContactNotAlive(user.getUser().getEmail());
         }
     }
