@@ -14,6 +14,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -121,15 +123,20 @@ public class UserSocketThread extends Thread{
     
     private Message getLoginMessage(Message message){
         User user = (User) message.getMessage();
-        User dbUser = (User) userDao.getObjByUnique(user.getEmail());;
+        User dbUser = (User) userDao.getObjByUnique(user.getEmail());
         
         if (dbUser != null){
-            if (dbUser.getPassword().trim().equals(user.getPassword().trim())){
-                UserConfig userCfg = new UserConfig(dbUser, socket.getInetAddress().toString(), 56001, true);
-                Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
-                userCfg.getUser().setContacts((ArrayList<UserConfig>) msg.getMessage());
-                ServerConfig.getInstance().addUser(userCfg);
-                return new Message(MessageType.USERLOGGED, userCfg);
+            if (dbUser.getPassword().trim().equals(user.getPassword().trim())){                
+                try {
+                    UserConfig userCfg = new UserConfig(dbUser, socket.getChannel().getLocalAddress().toString(), 56001, true);
+                    Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
+                    userCfg.getUser().setContacts((ArrayList<UserConfig>) msg.getMessage());
+                    ServerConfig.getInstance().addUser(userCfg);
+                    return new Message(MessageType.USERLOGGED, userCfg);
+                } catch (IOException ex) {
+                    Logger.getLogger(UserSocketThread.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }                                
             }else return new Message(MessageType.USERNOTLOGGED, "Senha não confere!");
         }else return new Message(MessageType.USERNOTLOGGED, "Email não está cadastrado!");                
     }
