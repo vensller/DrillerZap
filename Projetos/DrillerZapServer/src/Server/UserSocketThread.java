@@ -125,9 +125,9 @@ public class UserSocketThread extends Thread{
         
         if (dbUser != null){
             if (dbUser.getPassword().trim().equals(user.getPassword().trim())){
-                UserConfig userCfg = new UserConfig(dbUser, socket.getRemoteSocketAddress().toString(), socket.getPort());
+                UserConfig userCfg = new UserConfig(dbUser, socket.getRemoteSocketAddress().toString(), socket.getPort(), true);
                 Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
-                userCfg.getUser().setContacts((ArrayList<User>) msg.getMessage());
+                userCfg.getUser().setContacts((ArrayList<UserConfig>) msg.getMessage());
                 ServerConfig.getInstance().addUser(userCfg);
                 return new Message(MessageType.USERLOGGED, userCfg);
             }else return new Message(MessageType.USERNOTLOGGED, "Senha não confere!");
@@ -140,7 +140,7 @@ public class UserSocketThread extends Thread{
         return new Message(MessageType.USERLOGGEDOFF, "Usuário deslogado com sucesso!");
     }
     
-    private Message getUserContactsMessage(Message message){        
+    public Message getUserContactsMessage(Message message){        
         User user = (User) message.getMessage();
         List<UserConfig> userContacts = new ArrayList<>();
         List<Object> contacts = contactDao.getObjects(user.getID() + "");
@@ -150,7 +150,7 @@ public class UserSocketThread extends Thread{
             
             if (userCfg != null){
                 userContacts.add(userCfg);
-            }
+            }else userContacts.add(new UserConfig((User) obj, "", 0, false));
         }
         
         return new Message(MessageType.SENDCONTACTS, userContacts);

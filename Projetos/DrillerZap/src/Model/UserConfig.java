@@ -12,11 +12,13 @@ public class UserConfig implements Serializable{
     private User user;
     private String ip;
     private int port;
+    private boolean isLogged;
 
-    public UserConfig(User user, String ip, int port) {
+    public UserConfig(User user, String ip, int port, boolean isLogged) {
         this.user = user;
         this.ip = ip;
         this.port = port;
+        this.isLogged = isLogged;
     }
 
     public User getUser() {
@@ -30,5 +32,13 @@ public class UserConfig implements Serializable{
     public int getPort() {
         return port;
     }   
+
+    public boolean isLogged() {
+        return isLogged;
+    }
+
+    public void setIsLogged(boolean isLogged) {
+        this.isLogged = isLogged;
+    }
     
 }

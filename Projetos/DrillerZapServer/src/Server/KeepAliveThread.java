@@ -24,12 +24,36 @@ public class KeepAliveThread extends Thread{
             
             List<UserConfig> list = new ArrayList<>();
             list.addAll(ServerConfig.getInstance().getLoggedUsers());
+            List<CommunicateUserAlive> threads = new ArrayList<>();
             
             for (UserConfig user : list){
                 CommunicateUserAlive thread = new CommunicateUserAlive(user);
+                threads.add(thread);
                 thread.start();
             }
             
+            List<UserConfig> notAlive = new ArrayList<>();
+            
+            for (CommunicateUserAlive a : threads){
+                try {
+                    a.join();
+                    if (!a.getUserAlive()){
+                        notAlive.add(a.getUser());
+                    }                        
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(KeepAliveThread.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            for (UserConfig user : notAlive){
+                CommunicateContacts thread = new CommunicateContacts(user);
+                thread.start();
+                try {
+                    thread.join();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(KeepAliveThread.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }       
     }  
     

@@ -239,7 +239,7 @@ public class UserController {
 
                 output.writeObject(new Message(MessageType.GIVECONTACTS, contact.getUser()));
                 output.flush();
-                List<User> listContacts = (ArrayList<User>) input.readObject();
+                ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) input.readObject();
                 Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
                 addContactApproved();
                 

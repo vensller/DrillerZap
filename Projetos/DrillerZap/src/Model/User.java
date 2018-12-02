@@ -9,15 +9,15 @@ import java.util.List;
  */
 public class User implements Serializable{
     
-    private static final long serialVersionUID = 7526472295622776147L;    
+    private static final long serialVersionUID = 7526472295622776147L;
     private int ID;
     private String name;
     private String email;
     private String telephone;
     private String password;
-    private List<User> contacts;
+    private List<UserConfig> contacts;
 
-    public User(int ID, String name, String email, String telephone, String password, List<User> contacts) {
+    public User(int ID, String name, String email, String telephone, String password, List<UserConfig> contacts) {
         this.ID = ID;
         this.name = name;
         this.email = email;
@@ -69,12 +69,16 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    public List<User> getContacts() {
+    public List<UserConfig> getContacts() {
         return contacts;
     }
 
-    public void setContacts(List<User> contacts) {
+    public void setContacts(List<UserConfig> contacts) {
         this.contacts = contacts;
+    }
+
+    public Object getContact() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

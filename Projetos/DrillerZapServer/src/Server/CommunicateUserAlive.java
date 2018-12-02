@@ -10,8 +10,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,9 +18,10 @@ import java.util.logging.Logger;
 public class CommunicateUserAlive extends Thread{
     
     private UserConfig user;
+    private Boolean userAlive;
 
     public CommunicateUserAlive(UserConfig user) {
-        this.user = user;
+        this.user = user;     
     }
 
     @Override
@@ -40,17 +39,33 @@ public class CommunicateUserAlive extends Thread{
             
             if (messageInput.getType() != MessageType.ALIVE){
                 ServerConfig.getInstance().removeUser(user.getUser());
-            }            
+                userAlive = true;
+            }else userAlive = false;
           
         } catch (SocketTimeoutException ex) {
             ServerConfig.getInstance().removeUser(user.getUser());
+            userAlive = false;
         } catch (SocketException ex) {            
-            Logger.getLogger(CommunicateUserAlive.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(CommunicateUserAlive.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CommunicateUserAlive.class.getName()).log(Level.SEVERE, null, ex);
+            ServerConfig.getInstance().removeUser(user.getUser());            
+            userAlive = false;
+        } catch (IOException ex) {            
+        } catch (ClassNotFoundException ex) {            
         }
     }   
+
+    public UserConfig getUser() {
+        return user;
+    }
+
+    public void setUser(UserConfig user) {
+        this.user = user;
+    }
+
+    public Boolean getUserAlive() {
+        return userAlive;
+    }
+
+    
+    
     
 }
