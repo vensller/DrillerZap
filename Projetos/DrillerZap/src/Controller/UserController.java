@@ -339,5 +339,15 @@ public class UserController implements MessagesObserver{
         }
         return alive;
     }
+     
+     public UserConfig returnUser(String email) {
+         UserConfig u = null;
+        for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
+            if (user.getUser().getEmail().equals(email)){
+            u = new UserConfig(user.getUser(), user.getIp(), user.getPort(), user.isLogged());
+            }
+        }
+        return u;
+    }
 
 }
