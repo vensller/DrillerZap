@@ -46,7 +46,7 @@ public class KeepAliveThread extends Thread{
             }
             
             for (UserConfig user : notAlive){
-                CommunicateContacts thread = new CommunicateContacts(user);
+                CommunicateContacts thread = new CommunicateContacts(user, false);
                 thread.start();
                 try {
                     thread.join();
