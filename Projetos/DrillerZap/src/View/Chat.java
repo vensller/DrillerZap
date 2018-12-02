@@ -2,6 +2,7 @@ package View;
 
 import Controller.AddContactObserver;
 import Controller.UserController;
+import Model.UserConfig;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -207,6 +208,11 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         });
 
         jButtonLimpar.setText("Limpar");
+        jButtonLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLimparActionPerformed(evt);
+            }
+        });
 
         jButtonUpdate.setBackground(new java.awt.Color(126, 117, 136));
         jButtonUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/perfil.png"))); // NOI18N
@@ -312,7 +318,13 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
 
     private void jListContatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListContatosMouseClicked
      listContactOnline(jListContatos.getSelectedIndex());
+     UserConfig u = controller.returnUser((String) model.getElementAt(jListContatos.getSelectedIndex()));
+        System.out.println(u.getIp());
     }//GEN-LAST:event_jListContatosMouseClicked
+
+    private void jButtonLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLimparActionPerformed
+        jTextAreaMensagem.setText("");
+    }//GEN-LAST:event_jButtonLimparActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
