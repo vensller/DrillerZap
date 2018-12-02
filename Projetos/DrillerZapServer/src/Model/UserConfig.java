@@ -40,5 +40,9 @@ public class UserConfig implements Serializable{
     public void setIsLogged(boolean isLogged) {
         this.isLogged = isLogged;
     }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
     
 }

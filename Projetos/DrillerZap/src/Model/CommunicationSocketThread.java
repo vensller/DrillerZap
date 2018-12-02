@@ -42,6 +42,16 @@ public class CommunicationSocketThread extends Thread{
                     }
                     break;
                 case CONTACTNOTALIVE :
+                    Contact contact = (Contact) msg.getMessage();
+                    
+                    for (UserConfig user : Configuration.getInstance().getLoggedUser().getUser().getContacts()){
+                        if (user.getUser().getEmail().equals(contact.getContact().getEmail())){
+                            user.setIsLogged(false);
+                            user.setIp("");
+                            user.setPort(0);
+                        }                            
+                    }
+                    
                     break;
                 default : break;
             }                    

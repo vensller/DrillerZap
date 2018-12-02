@@ -242,10 +242,10 @@ public class UserController implements MessagesObserver{
                 output.flush();
                 ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) input.readObject();
                 Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
-                addContactApproved();
+                addContactApproved();                
+                processContacts();
+                processAliveContacts();
                 
-                
-
             } else {
                 addContactNoApproved((String) msgApproved.getMessage());
             }
