@@ -21,7 +21,8 @@ public class CommunicateUserAlive extends Thread{
     private Boolean userAlive;
 
     public CommunicateUserAlive(UserConfig user) {
-        this.user = user;     
+        this.user = user;  
+        userAlive = false;
     }
 
     @Override
@@ -39,8 +40,8 @@ public class CommunicateUserAlive extends Thread{
             
             if (messageInput.getType() != MessageType.ALIVE){
                 ServerConfig.getInstance().removeUser(user.getUser());
-                userAlive = true;
-            }else userAlive = false;
+                userAlive = false;
+            }else userAlive = true;
           
         } catch (SocketTimeoutException ex) {
             ServerConfig.getInstance().removeUser(user.getUser());

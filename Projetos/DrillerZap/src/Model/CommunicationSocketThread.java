@@ -30,16 +30,21 @@ public class CommunicationSocketThread extends Thread{
             
             Message msg = (Message) input.readObject();
             
-            if (msg.getType() == MessageType.KEEPALIVE){
-                output.writeObject(new Message(MessageType.ALIVE, ""));
-                output.flush();
-            }else if (msg.getType() == MessageType.USERMESSAGE){
-                MessageModel message = (MessageModel) msg.getMessage();
-                
-                for (MessagesObserver obs : messagesObserverList){
-                    obs.messageReceived(message.getFrom().getEmail(), message.getMessage());
-                }
-            }
+            switch (msg.getType()){
+                case KEEPALIVE :
+                    output.writeObject(new Message(MessageType.ALIVE, ""));
+                    output.flush();
+                    break;
+                case USERMESSAGE :
+                    MessageModel message = (MessageModel) msg.getMessage();                
+                    for (MessagesObserver obs : messagesObserverList){
+                        obs.messageReceived(message.getFrom().getEmail(), message.getMessage());
+                    }
+                    break;
+                case CONTACTNOTALIVE :
+                    break;
+                default : break;
+            }                    
             
             output.close();
             input.close();

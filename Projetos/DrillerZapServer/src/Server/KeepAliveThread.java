@@ -27,9 +27,9 @@ public class KeepAliveThread extends Thread{
             List<CommunicateUserAlive> threads = new ArrayList<>();
             
             for (UserConfig user : list){
-                CommunicateUserAlive thread = new CommunicateUserAlive(user);
-                threads.add(thread);
+                CommunicateUserAlive thread = new CommunicateUserAlive(user);                
                 thread.start();
+                threads.add(thread);
             }
             
             List<UserConfig> notAlive = new ArrayList<>();

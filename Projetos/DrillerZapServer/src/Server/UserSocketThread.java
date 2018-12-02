@@ -11,6 +11,7 @@ import Model.UserConfig;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,8 @@ public class UserSocketThread extends Thread{
         this.socket = socket;
         this.userDao = new UserDao();
         this.contactDao = new ContactDao();
-        System.out.println("Client " + socket.getInetAddress().toString() + " connected.");
+        if (socket != null)
+            System.out.println("Client " + socket.getInetAddress().toString() + " connected.");
     }    
 
     @Override
@@ -127,7 +129,7 @@ public class UserSocketThread extends Thread{
         
         if (dbUser != null){
             if (dbUser.getPassword().trim().equals(user.getPassword().trim())){                
-                UserConfig userCfg = new UserConfig(dbUser, socket.getLocalSocketAddress().toString(), 56001, true);
+                UserConfig userCfg = new UserConfig(dbUser, (((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/",""), 56001, true);
                 Message msg = getUserContactsMessage(new Message(MessageType.GIVECONTACTS, userCfg.getUser()));
                 userCfg.getUser().setContacts((ArrayList<UserConfig>) msg.getMessage());
                 ServerConfig.getInstance().addUser(userCfg);

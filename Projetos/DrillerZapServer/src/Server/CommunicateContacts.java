@@ -16,8 +16,8 @@ import java.util.logging.Logger;
  *
  * @author Ivens
  */
-public class CommunicateContacts extends Thread{
-    
+public class CommunicateContacts extends Thread {
+
     private UserConfig user;
 
     public CommunicateContacts(UserConfig userNotAlive) {
@@ -29,24 +29,26 @@ public class CommunicateContacts extends Thread{
         UserSocketThread socketThread = new UserSocketThread(null);
         Message msg = socketThread.getUserContactsMessage(new Message(MessageType.GIVECONTACTS, user.getUser()));
         List<UserConfig> contacts = (ArrayList<UserConfig>) msg.getMessage();
-        for (UserConfig contact : contacts) {            
+        for (UserConfig contact : contacts) {
             try {
-                Socket socket = new Socket(user.getIp(), user.getPort());
-                socket.setSoTimeout(2000);
-                ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+                if (contact.isLogged()) {
+                    Socket socket = new Socket(contact.getIp(), contact.getPort());
+                    socket.setSoTimeout(2000);
+                    ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+                    ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
-                Message message = new Message(MessageType.CONTACTNOTALIVE, contact);
-                output.writeObject(message);   
-                
-                output.close();
-                input.close();
-                socket.close();
+                    Message message = new Message(MessageType.CONTACTNOTALIVE, user);
+                    output.writeObject(message);
+                    output.flush();
+
+                    output.close();
+                    input.close();
+                    socket.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(CommunicateContacts.class.getName()).log(Level.SEVERE, null, ex);
-            }            
+            }
         }
-    }    
-    
-    
+    }
+
 }
