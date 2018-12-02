@@ -250,6 +250,7 @@ public class UserUpdate extends javax.swing.JFrame implements UpdateObserver{
     @Override
     public void updateApproved() {
         JOptionPane.showMessageDialog(rootPane, "Informações Salvas");
+        dispose();
     }
 
     @Override

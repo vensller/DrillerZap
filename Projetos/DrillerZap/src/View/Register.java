@@ -241,6 +241,7 @@ public class Register extends javax.swing.JFrame implements ApprovedObserver{
     @Override
     public void cadastroApproved() {
         JOptionPane.showMessageDialog(rootPane, "Cadastro Aprovado");
+        dispose();
     }
 
     @Override
