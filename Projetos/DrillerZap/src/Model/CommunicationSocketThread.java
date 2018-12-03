@@ -38,7 +38,7 @@ public class CommunicationSocketThread extends Thread{
                 case USERMESSAGE :
                     MessageModel message = (MessageModel) msg.getMessage();                
                     for (MessagesObserver obs : messagesObserverList){
-                        obs.messageReceived(message.getFrom().getEmail(), message.getMessage());
+                        obs.messageReceived(message.getFrom().getUser().getEmail(), message);
                     }
                     break;
                 case CONTACTNOTALIVE :

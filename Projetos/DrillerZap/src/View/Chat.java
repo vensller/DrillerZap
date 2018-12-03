@@ -3,7 +3,7 @@ package View;
 import Controller.AddContactObserver;
 import Controller.UserController;
 import Model.Configuration;
-import Model.UserConfig;
+import Model.MessageModel;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     private UserController controller;
     private DefaultListModel model;
     private HashMap<String, List<String>> messages;
+    private List<MessageModel> messagesChat;
 
     public Chat() {
         initComponents();
@@ -46,6 +47,8 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         controller.processContacts();
         controller.processAliveContacts();
 
+        
+
     }
 
     private void listContactOnline(int x) {
@@ -55,12 +58,33 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
                 jListContatos.setSelectionForeground(Color.RED);
                 jButtonEnviar.setEnabled(false);
                 jTextAreaMensagem.setEnabled(false);
-            }else{
+            } else {
                 jListContatos.setSelectionForeground(Color.GREEN);
-                 jButtonEnviar.setEnabled(true);
+                jButtonEnviar.setEnabled(true);
                 jTextAreaMensagem.setEnabled(true);
             }
         }
+    }
+
+    private void UpdateJTextAtea(String email) {
+        String aux = "";
+        jTextAreaChat.setText("");
+        for (MessageModel message : controller.returnMessages()) {
+            if (message.getFrom().getUser().getEmail().equals(Configuration.getInstance().getLoggedUser().getUser().getEmail())
+                    || message.getTo().getUser().getEmail().equals(Configuration.getInstance().getLoggedUser().getUser().getEmail())) {
+                if (email.equals(message.getFrom().getUser().getEmail())
+                        || email.equals(message.getTo().getUser().getEmail())) {
+                    aux = jTextAreaChat.getText();
+                    if ("".equals(aux)) {
+                        jTextAreaChat.setText(message.getFrom().getUser().getName() + " diz: " + message.getMessage());
+                    } else {
+                        jTextAreaChat.setText(aux + "\n" + message.getFrom().getUser().getName() + " diz: " + message.getMessage());
+
+                    }
+                }
+            }
+        }
+        jTextAreaMensagem.setText("");
     }
 
     private void addListeners() {
@@ -316,6 +340,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     private void jButtonEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnviarActionPerformed
         try {
             controller.sendMessage(Configuration.getInstance().getLoggedUser(), controller.returnUser((String) model.getElementAt(jListContatos.getSelectedIndex())), jTextAreaMensagem.getText());
+            UpdateJTextAtea((String) model.getElementAt(jListContatos.getSelectedIndex()));
         } catch (IOException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -323,7 +348,8 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     }//GEN-LAST:event_jButtonEnviarActionPerformed
 
     private void jListContatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListContatosMouseClicked
-     listContactOnline(jListContatos.getSelectedIndex());
+        listContactOnline(jListContatos.getSelectedIndex());
+        UpdateJTextAtea((String) model.getElementAt(jListContatos.getSelectedIndex()));
 
     }//GEN-LAST:event_jListContatosMouseClicked
 
@@ -382,7 +408,8 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     }
 
     @Override
-    public void messageReceived(String emailContact, String message) {
-
+    public void messageReceived(String emailContact, MessageModel message) {
+        UpdateJTextAtea(emailContact);
     }
+
 }

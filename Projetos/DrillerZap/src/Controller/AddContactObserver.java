@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.MessageModel;
 import java.util.List;
 
 /**
@@ -12,5 +13,6 @@ public interface AddContactObserver {
     void receiveContact(String email);
     void removeContact(String email);
     void contactAlive(String email, boolean alive, List<String> messages);
-    void messageReceived(String emailContact, String message);
+    void messageReceived(String emailContact, MessageModel message);
+    
 }

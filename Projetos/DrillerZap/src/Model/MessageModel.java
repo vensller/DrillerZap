@@ -1,19 +1,23 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Ivens
  */
-public class MessageModel {
+public class MessageModel implements Serializable {
     
     private UserConfig from;
     private UserConfig to;
     private String message;
 
+
     public MessageModel(UserConfig from, UserConfig to, String message) {
         this.from = from;
         this.to = to;
         this.message = message;
+
     }
 
     public UserConfig getFrom() {
@@ -39,6 +43,5 @@ public class MessageModel {
     public void setMessage(String message) {
         this.message = message;
     }
-    
-    
+
 }

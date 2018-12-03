@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ public class UserController implements MessagesObserver {
     private List<UpdateObserver> updateObserves;
     private List<AddContactObserver> addContactObservers;
     private List<ChatMessages> chatMessages;
+    private List<MessageModel> messages;
+    private List<MessagesObserver> messagesObserver;
 
     public UserController() {
         observers = new ArrayList<>();
@@ -39,6 +42,9 @@ public class UserController implements MessagesObserver {
         updateObserves = new ArrayList<>();
         addContactObservers = new ArrayList<>();
         chatMessages = new ArrayList<>();
+        messages = new ArrayList<>();
+        messagesObserver = new ArrayList<>();
+
     }
 
     public void submitUserToServer(String name, String email, String telephone, String password) throws ClassNotFoundException {
@@ -121,6 +127,7 @@ public class UserController implements MessagesObserver {
                 CommunicationSocket socketThread = new CommunicationSocket();
                 socketThread.start();
                 loginApproved();
+               
             } else {
                 loginNoApproved();
             }
@@ -320,10 +327,11 @@ public class UserController implements MessagesObserver {
         }
     }
 
-    @Override
-    public void messageReceived(String contactEmail, String message) {
-        for (AddContactObserver obs : addContactObservers) {
+    
+    public void messageReceived(String contactEmail, MessageModel message) {
+        for (MessagesObserver obs : messagesObserver) {
             obs.messageReceived(contactEmail, message);
+            messages.add(message);
         }
     }
 
@@ -353,21 +361,31 @@ public class UserController implements MessagesObserver {
     }
 
     public void sendMessage(UserConfig from, UserConfig to, String message) throws IOException {
-        Socket socket = new Socket(to.getIp(), to.getPort());
+        Socket socket = new Socket(to.getIp(), 56001);
         socket.setReuseAddress(true);
 
         ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
         ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
         
         MessageModel msg = new MessageModel(from, to, message);
-        output.writeObject(msg);
-        output.flush();
+        messages.add(msg);
+        
+        messageReceived(msg.getTo().getUser().getEmail(), msg);
+        
+        Message m = new Message(MessageType.USERMESSAGE, msg);
 
+        output.writeObject(m);
+        output.flush();
 
         output.close();
         input.close();
         socket.close();
 
+    }
+
+    public List<MessageModel> returnMessages() {
+        return messages;
     }
 
 }
