@@ -64,14 +64,18 @@ public class CommunicationSocketThread extends Thread {
                     }
                     break;
                 case RELOADCONTACTS:
-                    output = new ObjectOutputStream(socket.getOutputStream());
-                    input = new ObjectInputStream(socket.getInputStream());
+                    Socket newSocket = new Socket(Configuration.getInstance().getAddress(), Configuration.getInstance().getPort());
+                    ObjectOutputStream newOutput = new ObjectOutputStream(newSocket.getOutputStream());
+                    ObjectInputStream newInput = new ObjectInputStream(newSocket.getInputStream());
 
-                    output.writeObject(new Message(MessageType.GIVECONTACTS, Configuration.getInstance().getLoggedUser().getUser()));
-                    output.flush();
-                    Message inpMsg = (Message) input.readObject();
-                    ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) inpMsg.getMessage();
+                    newOutput.writeObject(new Message(MessageType.GIVECONTACTS, Configuration.getInstance().getLoggedUser().getUser()));
+                    newOutput.flush();
+                    Message contactMessage = (Message) newInput.readObject();
+                    ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) contactMessage.getMessage();
                     Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
+                    newOutput.close();
+                    newInput.close();
+                    newSocket.close();
                     communication.reloadContats();
                     break;
                 default:

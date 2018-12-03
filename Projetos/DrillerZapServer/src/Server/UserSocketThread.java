@@ -115,6 +115,11 @@ public class UserSocketThread extends Thread{
         if (user != null && userContact != null){
             if (contactDao.getObjByUnique(user.getID() + " AND A.ID_CONTACT = " + userContact.getID()) == null){
                 contactDao.insert(contact);
+                UserConfig userCfg = ServerConfig.getInstance().getLoggedUserConfig(userContact);
+                if (userCfg != null && userCfg.isLogged()){
+                    CommunicateUserToReloadContacts thread = new CommunicateUserToReloadContacts(userCfg);
+                    thread.start();
+                }
                 return new Message(MessageType.CONTACTREGISTERED, "Contato adicionado com sucesso!");
             }else return new Message(MessageType.CONTACTREGFAIL, "Contato já adicionado!");
         }else return new Message(MessageType.CONTACTREGFAIL, "Contato não encontrado!");        

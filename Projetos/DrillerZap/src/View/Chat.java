@@ -94,8 +94,10 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 selectedIndex = jListContatos.getSelectedIndex();
-                listContactOnline(jListContatos.getSelectedIndex());
-                UpdateJTextAtea((String) model.getElementAt(jListContatos.getSelectedIndex()));
+                if (selectedIndex != -1){
+                    listContactOnline(jListContatos.getSelectedIndex());
+                    UpdateJTextAtea((String) model.getElementAt(jListContatos.getSelectedIndex()));
+                }else UpdateJTextAtea("");
             }
         });
     }
