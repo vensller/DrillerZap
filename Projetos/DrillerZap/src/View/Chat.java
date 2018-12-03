@@ -46,7 +46,6 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         controller.observAddContact(this);
         controller.processContacts();
         controller.processAliveContacts();
-
         
 
     }

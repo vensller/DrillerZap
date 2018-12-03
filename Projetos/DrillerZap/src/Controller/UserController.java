@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,6 @@ public class UserController implements MessagesObserver {
     private List<AddContactObserver> addContactObservers;
     private List<ChatMessages> chatMessages;
     private List<MessageModel> messages;
-    private List<MessagesObserver> messagesObserver;
 
     public UserController() {
         observers = new ArrayList<>();
@@ -42,8 +40,7 @@ public class UserController implements MessagesObserver {
         updateObserves = new ArrayList<>();
         addContactObservers = new ArrayList<>();
         chatMessages = new ArrayList<>();
-        messages = new ArrayList<>();
-        messagesObserver = new ArrayList<>();
+        messages = new ArrayList<>();        
 
     }
 
@@ -326,12 +323,11 @@ public class UserController implements MessagesObserver {
             }
         }
     }
-
     
     public void messageReceived(String contactEmail, MessageModel message) {
-        for (MessagesObserver obs : messagesObserver) {
-            obs.messageReceived(contactEmail, message);
-            messages.add(message);
+        messages.add(message);
+        for (AddContactObserver obs : addContactObservers) {            
+            obs.messageReceived(contactEmail, message);            
         }
     }
 
