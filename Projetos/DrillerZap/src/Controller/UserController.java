@@ -385,4 +385,10 @@ public class UserController implements MessagesObserver {
         return messages;
     }
 
+    @Override
+    public void reloadContacts() {
+        processContacts();
+        processAliveContacts();
+    }
+
 }
