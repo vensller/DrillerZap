@@ -14,6 +14,7 @@ public interface AddContactObserver {
     void removeContact(String email);
     void contactAlive(String email, boolean alive, List<String> messages);
     void messageReceived(String emailContact, MessageModel message);
+    void removeContactApproved();
     void cleanList();
     
 }

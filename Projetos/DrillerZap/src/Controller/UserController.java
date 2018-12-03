@@ -328,6 +328,62 @@ public class UserController implements MessagesObserver {
         }
     }
     
+    public void removeContact(String email) throws ClassNotFoundException {
+        try {
+
+            User user = new User();
+            user.setEmail(email);
+            Contact contact = new Contact(Configuration.getInstance().getLoggedUser().getUser(), user);
+            Socket socket = new Socket(Configuration.getInstance().getAddress(), Configuration.getInstance().getPort());
+            socket.setReuseAddress(true);
+
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
+            Message msg = new Message(MessageType.REMOVECONTACT, contact);
+
+            output.writeObject(msg);
+            output.flush();
+
+            Object obj = input.readObject();
+            Message msgApproved = (Message) obj;
+         
+            output.close();
+            input.close();
+            socket.close();
+
+            if (msgApproved.getType() == MessageType.REMOVECONTACTSUCESS) {
+                socket = new Socket(Configuration.getInstance().getAddress(), Configuration.getInstance().getPort());
+                output = new ObjectOutputStream(socket.getOutputStream());
+                input = new ObjectInputStream(socket.getInputStream());
+
+                output.writeObject(new Message(MessageType.GIVECONTACTS, contact.getUser()));
+                output.flush();
+                Message message = (Message) input.readObject();
+                ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) message.getMessage();
+                Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
+                output.close();
+                input.close();
+                socket.close();
+                removeContactApproved();
+                reloadContacts();
+
+            }
+        } catch (ConnectException a) {
+            loginNoApproved();
+        } catch (IOException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    public void removeContactApproved() {
+        for (AddContactObserver obs : addContactObservers) {
+            obs.removeContactApproved();
+        }
+
+    }
+    
     
     public void messageReceived(String contactEmail, MessageModel message) {
         messages.add(message);

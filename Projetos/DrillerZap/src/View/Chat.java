@@ -117,6 +117,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         jScrollPane3 = new javax.swing.JScrollPane();
         jListContatos = new javax.swing.JList<>();
         jButtonAdicionar = new javax.swing.JButton();
+        jButtonDeleteContact = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaChat = new javax.swing.JTextArea();
@@ -174,6 +175,13 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
             }
         });
 
+        jButtonDeleteContact.setText("Excluir");
+        jButtonDeleteContact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDeleteContactActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -182,8 +190,9 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButtonAdicionar)
-                        .addGap(0, 59, Short.MAX_VALUE)))
+                        .addComponent(jButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonDeleteContact)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -191,7 +200,9 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonAdicionar)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonAdicionar)
+                    .addComponent(jButtonDeleteContact))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -208,7 +219,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -254,7 +265,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jButtonEnviar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -356,9 +367,24 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         jTextAreaMensagem.setText("");
     }//GEN-LAST:event_jButtonLimparActionPerformed
 
+    private void jButtonDeleteContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteContactActionPerformed
+    String contato = (String) model.getElementAt(jListContatos.getSelectedIndex());
+    int opcao = JOptionPane.YES_NO_OPTION;
+    int result = JOptionPane.showConfirmDialog(this, "Deseja exlcuir o contato "+contato, "", opcao);
+    if(result == 0) {
+        try {
+            controller.removeContact(contato);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    }//GEN-LAST:event_jButtonDeleteContactActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdicionar;
+    private javax.swing.JButton jButtonDeleteContact;
     private javax.swing.JButton jButtonEnviar;
     private javax.swing.JButton jButtonLimpar;
     private javax.swing.JButton jButtonUpdate;
@@ -415,6 +441,12 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     public void cleanList() {
         model.removeAllElements();
         jListContatos.repaint();
+    }
+
+    @Override
+    public void removeContactApproved() {
+        JOptionPane.showMessageDialog(rootPane, "Contato Excluído");
+        
     }
 
 }
