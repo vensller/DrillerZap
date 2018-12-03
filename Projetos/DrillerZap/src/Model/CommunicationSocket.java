@@ -32,7 +32,7 @@ public class CommunicationSocket extends Thread{
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("Client " + socket.getInetAddress().toString() + " connected.");
-                CommunicationSocketThread thread = new CommunicationSocketThread(socket, messagesObserverList);
+                CommunicationSocketThread thread = new CommunicationSocketThread(socket, this);
                 thread.start();
             }
         } catch (IOException ex) {
@@ -40,6 +40,18 @@ public class CommunicationSocket extends Thread{
         }
         
     }    
+    
+    public void reloadContats(){
+        for (MessagesObserver obs : messagesObserverList){
+            obs.reloadContacts();
+        }
+    }
+    
+    public void messageReceived(MessageModel message){
+        for (MessagesObserver obs : messagesObserverList) {
+            obs.messageReceived(message.getFrom().getUser().getEmail(), message);
+        }
+    }
     
     
 }

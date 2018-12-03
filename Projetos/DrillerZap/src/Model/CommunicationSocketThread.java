@@ -16,11 +16,11 @@ import java.util.logging.Logger;
 public class CommunicationSocketThread extends Thread {
 
     private Socket socket;
-    private List<MessagesObserver> messagesObserverList;
+    private CommunicationSocket communication;
 
-    public CommunicationSocketThread(Socket socket, List<MessagesObserver> messagesObserverList) {
+    public CommunicationSocketThread(Socket socket, CommunicationSocket communication) {
         this.socket = socket;
-        this.messagesObserverList = messagesObserverList;
+        this.communication = communication;
     }
 
     @Override
@@ -38,9 +38,7 @@ public class CommunicationSocketThread extends Thread {
                     break;
                 case USERMESSAGE:
                     MessageModel message = (MessageModel) msg.getMessage();
-                    for (MessagesObserver obs : messagesObserverList) {
-                        obs.messageReceived(message.getFrom().getUser().getEmail(), message);
-                    }
+                    communication.messageReceived(message);
                     break;
                 case CONTACTNOTALIVE:
                     UserConfig contact = (UserConfig) msg.getMessage();
@@ -74,9 +72,7 @@ public class CommunicationSocketThread extends Thread {
                     Message inpMsg = (Message) input.readObject();
                     ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) inpMsg.getMessage();
                     Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
-                    for (MessagesObserver obs : messagesObserverList){
-                        obs.reloadContacts();
-                    }
+                    communication.reloadContats();
                     break;
                 default:
                     break;
