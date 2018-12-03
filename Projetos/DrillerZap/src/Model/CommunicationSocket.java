@@ -31,7 +31,7 @@ public class CommunicationSocket extends Thread{
             serverSocket.setReuseAddress(true);
             while (true) {
                 Socket socket = serverSocket.accept();
-                 System.out.println("Client " + socket.getInetAddress().toString() + " connected.");
+                System.out.println("Client " + socket.getInetAddress().toString() + " connected.");
                 CommunicationSocketThread thread = new CommunicationSocketThread(socket, messagesObserverList);
                 thread.start();
             }

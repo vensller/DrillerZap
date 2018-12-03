@@ -236,27 +236,30 @@ public class UserController implements MessagesObserver {
 
             Object obj = input.readObject();
             Message msgApproved = (Message) obj;
-
+         
             output.close();
             input.close();
+            socket.close();
 
             if (msgApproved.getType() == MessageType.CONTACTREGISTERED) {
+                socket = new Socket(Configuration.getInstance().getAddress(), Configuration.getInstance().getPort());
                 output = new ObjectOutputStream(socket.getOutputStream());
                 input = new ObjectInputStream(socket.getInputStream());
 
                 output.writeObject(new Message(MessageType.GIVECONTACTS, contact.getUser()));
                 output.flush();
-                ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) input.readObject();
+                Message message = (Message) input.readObject();
+                ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) message.getMessage();
                 Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
+                output.close();
+                input.close();
+                socket.close();
                 addContactApproved();
-                processContacts();
-                processAliveContacts();
+                reloadContacts();
 
             } else {
                 addContactNoApproved((String) msgApproved.getMessage());
             }
-
-            socket.close();
         } catch (ConnectException a) {
             loginNoApproved();
         } catch (IOException ex) {
@@ -384,9 +387,16 @@ public class UserController implements MessagesObserver {
     public List<MessageModel> returnMessages() {
         return messages;
     }
+    
+    private void cleanList(){        
+        for (AddContactObserver obs : addContactObservers){
+            obs.cleanList();
+        }
+    }
 
     @Override
     public void reloadContacts() {
+        cleanList();
         processContacts();
         processAliveContacts();
     }

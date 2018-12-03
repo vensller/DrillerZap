@@ -411,4 +411,10 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         UpdateJTextAtea(emailContact);
     }
 
+    @Override
+    public void cleanList() {
+        model.removeAllElements();
+        jListContatos.repaint();
+    }
+
 }

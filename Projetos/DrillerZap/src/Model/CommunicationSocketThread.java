@@ -71,7 +71,8 @@ public class CommunicationSocketThread extends Thread {
 
                     output.writeObject(new Message(MessageType.GIVECONTACTS, Configuration.getInstance().getLoggedUser().getUser()));
                     output.flush();
-                    ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) input.readObject();
+                    Message inpMsg = (Message) input.readObject();
+                    ArrayList<UserConfig> listContacts = (ArrayList<UserConfig>) inpMsg.getMessage();
                     Configuration.getInstance().getLoggedUser().getUser().setContacts(listContacts);
                     for (MessagesObserver obs : messagesObserverList){
                         obs.reloadContacts();
