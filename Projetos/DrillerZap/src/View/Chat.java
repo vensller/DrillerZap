@@ -26,9 +26,13 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     private DefaultListModel model;
     private HashMap<String, List<String>> messages;
     private List<MessageModel> messagesChat;
-
-    public Chat() {
+    private int selectedIndex;
+    
+    
+    public Chat(UserController controller) {
         initComponents();
+        this.controller = controller;
+        selectedIndex = -1;
         this.setLocationRelativeTo(null);
         addListeners();
         init();
@@ -41,8 +45,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
                 + "- Paulo Henrique Rodrigues.");
         this.messages = new HashMap<>();
         this.model = new DefaultListModel();
-        this.jListContatos.setModel(model);
-        controller = new UserController();
+        this.jListContatos.setModel(model);        
         controller.observAddContact(this);
         controller.processContacts();
         controller.processAliveContacts();
@@ -90,20 +93,11 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
         jListContatos.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                processMessages((String) model.getElementAt(jListContatos.getSelectedIndex()));
-
+                selectedIndex = jListContatos.getSelectedIndex();
+                listContactOnline(jListContatos.getSelectedIndex());
+                UpdateJTextAtea((String) model.getElementAt(jListContatos.getSelectedIndex()));
             }
         });
-    }
-
-    private void processMessages(String email) {
-        jTextAreaChat.setText("");
-        List<String> chat = messages.get(email);
-        if (chat != null) {
-            for (String s : chat) {
-                jTextAreaChat.append(s + "\n");
-            }
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -349,8 +343,8 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
 
     private void jButtonEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnviarActionPerformed
         try {
-            controller.sendMessage(Configuration.getInstance().getLoggedUser(), controller.returnUser((String) model.getElementAt(jListContatos.getSelectedIndex())), jTextAreaMensagem.getText());
-            UpdateJTextAtea((String) model.getElementAt(jListContatos.getSelectedIndex()));
+            controller.sendMessage(Configuration.getInstance().getLoggedUser(), controller.returnUser((String) model.getElementAt(selectedIndex)), jTextAreaMensagem.getText());
+            UpdateJTextAtea((String) model.getElementAt(selectedIndex));
         } catch (IOException ex) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -358,8 +352,7 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
     }//GEN-LAST:event_jButtonEnviarActionPerformed
 
     private void jListContatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListContatosMouseClicked
-        listContactOnline(jListContatos.getSelectedIndex());
-        UpdateJTextAtea((String) model.getElementAt(jListContatos.getSelectedIndex()));
+        
 
     }//GEN-LAST:event_jListContatosMouseClicked
 
@@ -434,11 +427,12 @@ public class Chat extends javax.swing.JFrame implements AddContactObserver {
 
     @Override
     public void messageReceived(String emailContact, MessageModel message) {
-        UpdateJTextAtea(emailContact);
+        UpdateJTextAtea((String) model.getElementAt(selectedIndex));
     }
 
     @Override
     public void cleanList() {
+        listContactOnline(-1);
         model.removeAllElements();
         jListContatos.repaint();
     }

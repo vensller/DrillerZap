@@ -217,7 +217,7 @@ public class Login extends javax.swing.JFrame implements LoginObserver{
     @Override
     public void loginApproved() {
         JOptionPane.showMessageDialog(rootPane, "Logado com sucesso");
-        Chat chat = new Chat();
+        Chat chat = new Chat(controller);
         chat.setVisible(true);
         dispose();
     }
