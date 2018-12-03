@@ -325,6 +325,7 @@ public class UserController implements MessagesObserver {
         }
     }
     
+    
     public void messageReceived(String contactEmail, MessageModel message) {
         messages.add(message);
         for (AddContactObserver obs : addContactObservers) {            
@@ -367,9 +368,7 @@ public class UserController implements MessagesObserver {
         
         MessageModel msg = new MessageModel(from, to, message);
         messages.add(msg);
-        
-        messageReceived(msg.getTo().getUser().getEmail(), msg);
-        
+                
         Message m = new Message(MessageType.USERMESSAGE, msg);
 
         output.writeObject(m);
