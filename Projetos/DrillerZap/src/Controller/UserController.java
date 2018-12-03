@@ -122,6 +122,7 @@ public class UserController implements MessagesObserver {
             if (msgApproved.getType() == MessageType.USERLOGGED) {
                 Configuration.getInstance().setLoggedUser((UserConfig) msgApproved.getMessage());
                 CommunicationSocket socketThread = new CommunicationSocket();
+                socketThread.observ(this);
                 socketThread.start();
                 loginApproved();
                

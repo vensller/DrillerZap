@@ -63,6 +63,10 @@ public class CommunicationSocketThread extends Thread{
                             user.setPort(contactAlive.getPort());
                         }
                     }
+                    break;
+                case RELOADCONTACTS :
+                    
+                    break;
                 default : break;
             }                    
             

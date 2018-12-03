@@ -60,6 +60,11 @@ public class ContactDao implements Dao{
             stmt.setInt(1, contact.getUser().getID());
             stmt.setInt(2, contact.getContact().getID());
             stmt.execute();
+            
+            stmt = con.prepareStatement(sqlDelete);
+            stmt.setInt(2, contact.getUser().getID());
+            stmt.setInt(1, contact.getContact().getID());
+            stmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(ContactDao.class.getName()).log(Level.SEVERE, null, ex);
         }        

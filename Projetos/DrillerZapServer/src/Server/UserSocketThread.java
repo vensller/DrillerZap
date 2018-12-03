@@ -97,6 +97,11 @@ public class UserSocketThread extends Thread{
         contact.setUser(user);
         contact.setContact(userContact);
         contactDao.delete(contact);
+        UserConfig userCfg = ServerConfig.getInstance().getLoggedUserConfig(userContact);
+        if (userCfg != null && userCfg.isLogged()){
+            CommunicateUserToReloadContacts thread = new CommunicateUserToReloadContacts(userCfg);
+            thread.start();
+        }
         return new Message(MessageType.REMOVECONTACTSUCESS, "Contato removido com sucesso!");
     }
     
