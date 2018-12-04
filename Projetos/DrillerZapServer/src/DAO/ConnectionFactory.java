@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.ServerConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 public class ConnectionFactory {
     public static Connection getConnection() {
         try {            
-            return DriverManager.getConnection("jdbc:postgresql://localhost/DrillerZap", "postgres", "idmf7798");
+            return DriverManager.getConnection(ServerConfig.getInstance().getDatabase(), ServerConfig.getInstance().getUsername(), ServerConfig.getInstance().getPassword());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }        
